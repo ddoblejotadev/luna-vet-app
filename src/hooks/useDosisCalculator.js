@@ -45,6 +45,54 @@ export function useDosisCalculator() {
   }, [])
 
   /**
+   * Calcular rango de dosis por peso desde una dosis mínima y máxima del catálogo.
+   * @param {number} peso - Peso del animal en kg
+   * @param {number} dosisMinPorKg - Dosis mínima recomendada por kg
+   * @param {number} dosisMaxPorKg - Dosis máxima recomendada por kg
+   * @param {number} frecuencia - Cada cuántas horas
+   * @returns {object} Resultado del cálculo
+   */
+  const calcularRangoPorPeso = useCallback((peso, dosisMinPorKg, dosisMaxPorKg, frecuencia = 12) => {
+    try {
+      if (peso <= 0 || dosisMinPorKg <= 0 || dosisMaxPorKg <= 0) {
+        throw new Error('El peso y las dosis deben ser positivos')
+      }
+
+      if (dosisMinPorKg > dosisMaxPorKg) {
+        throw new Error('La dosis mínima no puede superar la dosis máxima')
+      }
+
+      const dosisMinSingle = peso * dosisMinPorKg
+      const dosisMaxSingle = peso * dosisMaxPorKg
+      const administracionesDiarias = 24 / frecuencia
+      const dosisMinDaily = dosisMinSingle * administracionesDiarias
+      const dosisMaxDaily = dosisMaxSingle * administracionesDiarias
+
+      const resultado = {
+        tipo: 'rango',
+        dosisMinSingle: Number(dosisMinSingle.toFixed(2)),
+        dosisMaxSingle: Number(dosisMaxSingle.toFixed(2)),
+        dosisMinDaily: Number(dosisMinDaily.toFixed(2)),
+        dosisMaxDaily: Number(dosisMaxDaily.toFixed(2)),
+        dosisMinPorKg,
+        dosisMaxPorKg,
+        frecuencia,
+        unidad: 'mg',
+        notas: `Administrar ${dosisMinSingle.toFixed(2)}-${dosisMaxSingle.toFixed(2)}mg cada ${frecuencia} horas`,
+      }
+
+      setResultado(resultado)
+      setError(null)
+      return resultado
+    } catch (err) {
+      const errorMsg = err.message || 'Error al calcular rango de dosis'
+      setError(errorMsg)
+      setResultado(null)
+      throw err
+    }
+  }, [])
+
+  /**
    * Calcular dosis por superficie corporal (BSA)
    * Fórmula: BSA (m²) = (Peso en kg ^ 0.67) × 10.1 / 1000
    */
@@ -112,6 +160,7 @@ export function useDosisCalculator() {
     resultado,
     error,
     calcularPorPeso,
+    calcularRangoPorPeso,
     calcularPorBSA,
     calcularConMargen,
     resetear,
