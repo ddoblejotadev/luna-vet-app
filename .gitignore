@@ -18,6 +18,9 @@ pnpm-debug.log*
 supabase/.branches/
 supabase/.temp/
 
+# Local Engram memory config
+.engram/
+
 # Editores
 .vscode/
 .idea/
