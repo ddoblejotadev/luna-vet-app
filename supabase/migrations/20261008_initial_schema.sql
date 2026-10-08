@@ -88,16 +88,37 @@ CREATE TABLE IF NOT EXISTS public.historial_calculos (
   medicamento_id UUID REFERENCES public.medicamentos(id) ON DELETE SET NULL,
   especie_id UUID REFERENCES public.especies(id) ON DELETE SET NULL,
   peso_kg DECIMAL(10, 2) NOT NULL,
-  dosis_calculada DECIMAL(10, 4) NOT NULL,
-  metodo_calculo VARCHAR(20) NOT NULL, -- 'peso', 'bsa', 'margen'
+  dosis_calculada DECIMAL(10, 4),
+  dosis_minima_calculada DECIMAL(10, 4),
+  dosis_maxima_calculada DECIMAL(10, 4),
+  dosis_minima_mg_kg DECIMAL(10, 4),
+  dosis_maxima_mg_kg DECIMAL(10, 4),
+  metodo_calculo VARCHAR(20) NOT NULL, -- 'peso', 'catalogo', 'bsa', 'margen'
   frecuencia_horas INTEGER,
   notas TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  CONSTRAINT historial_calculos_dosis_valida CHECK (
+    dosis_calculada IS NOT NULL
+    OR (
+      dosis_minima_calculada IS NOT NULL
+      AND dosis_maxima_calculada IS NOT NULL
+      AND dosis_minima_calculada <= dosis_maxima_calculada
+    )
+  ),
+  CONSTRAINT historial_calculos_dosis_catalogo_valida CHECK (
+    dosis_minima_mg_kg IS NULL
+    OR dosis_maxima_mg_kg IS NULL
+    OR dosis_minima_mg_kg <= dosis_maxima_mg_kg
+  ),
+  CONSTRAINT historial_calculos_metodo_valido CHECK (
+    metodo_calculo IN ('peso', 'catalogo', 'bsa', 'margen')
+  )
 );
 
 CREATE INDEX IF NOT EXISTS idx_historial_usuario ON public.historial_calculos(usuario_id);
 CREATE INDEX IF NOT EXISTS idx_historial_medicamento ON public.historial_calculos(medicamento_id);
 CREATE INDEX IF NOT EXISTS idx_historial_fecha ON public.historial_calculos(created_at);
+CREATE INDEX IF NOT EXISTS idx_historial_metodo ON public.historial_calculos(metodo_calculo);
 
 -- ============================================================================
 -- TABLA: medicamentos_favoritos

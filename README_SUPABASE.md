@@ -113,7 +113,10 @@ VITE_SUPABASE_ANON_KEY=eyJhbG...
 
 4. **historial_calculos**: Registro de cálculos realizados
    - Usuario, medicamento, especie
-   - Peso, dosis calculada, método
+   - Peso, método y frecuencia
+   - Dosis única calculada para cálculos manuales
+   - Rango mínimo/máximo calculado para medicamentos del catálogo
+   - Dosis mínima/máxima mg/kg usada como fuente del cálculo
 
 5. **medicamentos_favoritos**: Medicamentos guardados por usuario
    - Acceso rápido a medicamentos frecuentes
