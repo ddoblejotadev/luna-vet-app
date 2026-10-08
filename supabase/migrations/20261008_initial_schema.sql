@@ -35,10 +35,13 @@ CREATE TABLE IF NOT EXISTS public.medicamentos (
 );
 
 -- Índices para búsquedas rápidas
-CREATE INDEX idx_medicamentos_nombre ON public.medicamentos(nombre);
-CREATE INDEX idx_medicamentos_familia ON public.medicamentos(familia_terapeutica);
-CREATE INDEX idx_medicamentos_principio ON public.medicamentos(principio_activo);
-CREATE INDEX idx_medicamentos_activo ON public.medicamentos(activo);
+CREATE INDEX IF NOT EXISTS idx_medicamentos_nombre ON public.medicamentos(nombre);
+CREATE INDEX IF NOT EXISTS idx_medicamentos_familia ON public.medicamentos(familia_terapeutica);
+CREATE INDEX IF NOT EXISTS idx_medicamentos_principio ON public.medicamentos(principio_activo);
+CREATE INDEX IF NOT EXISTS idx_medicamentos_activo ON public.medicamentos(activo);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_medicamentos_unique_catalog_entry
+  ON public.medicamentos(nombre, principio_activo, familia_terapeutica, presentacion, concentracion);
+
 
 -- ============================================================================
 -- TABLA: especies
@@ -72,8 +75,8 @@ CREATE TABLE IF NOT EXISTS public.usuarios (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX idx_usuarios_email ON public.usuarios(email);
-CREATE INDEX idx_usuarios_activo ON public.usuarios(activo);
+CREATE INDEX IF NOT EXISTS idx_usuarios_email ON public.usuarios(email);
+CREATE INDEX IF NOT EXISTS idx_usuarios_activo ON public.usuarios(activo);
 
 -- ============================================================================
 -- TABLA: historial_calculos
@@ -92,9 +95,9 @@ CREATE TABLE IF NOT EXISTS public.historial_calculos (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX idx_historial_usuario ON public.historial_calculos(usuario_id);
-CREATE INDEX idx_historial_medicamento ON public.historial_calculos(medicamento_id);
-CREATE INDEX idx_historial_fecha ON public.historial_calculos(created_at);
+CREATE INDEX IF NOT EXISTS idx_historial_usuario ON public.historial_calculos(usuario_id);
+CREATE INDEX IF NOT EXISTS idx_historial_medicamento ON public.historial_calculos(medicamento_id);
+CREATE INDEX IF NOT EXISTS idx_historial_fecha ON public.historial_calculos(created_at);
 
 -- ============================================================================
 -- TABLA: medicamentos_favoritos
@@ -109,7 +112,7 @@ CREATE TABLE IF NOT EXISTS public.medicamentos_favoritos (
   UNIQUE(usuario_id, medicamento_id)
 );
 
-CREATE INDEX idx_favoritos_usuario ON public.medicamentos_favoritos(usuario_id);
+CREATE INDEX IF NOT EXISTS idx_favoritos_usuario ON public.medicamentos_favoritos(usuario_id);
 
 -- ============================================================================
 -- FUNCIONES Y TRIGGERS
@@ -125,12 +128,14 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger para medicamentos
+DROP TRIGGER IF EXISTS update_medicamentos_updated_at ON public.medicamentos;
 CREATE TRIGGER update_medicamentos_updated_at
   BEFORE UPDATE ON public.medicamentos
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
 -- Trigger para usuarios
+DROP TRIGGER IF EXISTS update_usuarios_updated_at ON public.usuarios;
 CREATE TRIGGER update_usuarios_updated_at
   BEFORE UPDATE ON public.usuarios
   FOR EACH ROW
@@ -148,50 +153,61 @@ ALTER TABLE public.historial_calculos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.medicamentos_favoritos ENABLE ROW LEVEL SECURITY;
 
 -- Políticas para medicamentos (lectura pública, escritura admin)
+DROP POLICY IF EXISTS "Medicamentos son públicos para lectura" ON public.medicamentos;
 CREATE POLICY "Medicamentos son públicos para lectura"
   ON public.medicamentos FOR SELECT
   USING (activo = true);
 
+DROP POLICY IF EXISTS "Solo admins pueden insertar medicamentos" ON public.medicamentos;
 CREATE POLICY "Solo admins pueden insertar medicamentos"
   ON public.medicamentos FOR INSERT
   WITH CHECK (auth.jwt() ->> 'role' = 'admin');
 
+DROP POLICY IF EXISTS "Solo admins pueden actualizar medicamentos" ON public.medicamentos;
 CREATE POLICY "Solo admins pueden actualizar medicamentos"
   ON public.medicamentos FOR UPDATE
   USING (auth.jwt() ->> 'role' = 'admin');
 
 -- Políticas para especies (lectura pública)
+DROP POLICY IF EXISTS "Especies son públicas para lectura" ON public.especies;
 CREATE POLICY "Especies son públicas para lectura"
   ON public.especies FOR SELECT
   USING (true);
 
 -- Políticas para usuarios (solo propios datos)
+DROP POLICY IF EXISTS "Usuarios pueden ver su propio perfil" ON public.usuarios;
 CREATE POLICY "Usuarios pueden ver su propio perfil"
   ON public.usuarios FOR SELECT
   USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Usuarios pueden actualizar su propio perfil" ON public.usuarios;
 CREATE POLICY "Usuarios pueden actualizar su propio perfil"
   ON public.usuarios FOR UPDATE
   USING (auth.uid() = id);
 
 -- Políticas para historial (solo propios datos)
+DROP POLICY IF EXISTS "Usuarios pueden ver su propio historial" ON public.historial_calculos;
 CREATE POLICY "Usuarios pueden ver su propio historial"
   ON public.historial_calculos FOR SELECT
   USING (auth.uid() = usuario_id);
 
+DROP POLICY IF EXISTS "Usuarios pueden insertar en su propio historial" ON public.historial_calculos;
 CREATE POLICY "Usuarios pueden insertar en su propio historial"
   ON public.historial_calculos FOR INSERT
   WITH CHECK (auth.uid() = usuario_id);
 
 -- Políticas para favoritos (solo propios datos)
+DROP POLICY IF EXISTS "Usuarios pueden ver sus propios favoritos" ON public.medicamentos_favoritos;
 CREATE POLICY "Usuarios pueden ver sus propios favoritos"
   ON public.medicamentos_favoritos FOR SELECT
   USING (auth.uid() = usuario_id);
 
+DROP POLICY IF EXISTS "Usuarios pueden insertar sus propios favoritos" ON public.medicamentos_favoritos;
 CREATE POLICY "Usuarios pueden insertar sus propios favoritos"
   ON public.medicamentos_favoritos FOR INSERT
   WITH CHECK (auth.uid() = usuario_id);
 
+DROP POLICY IF EXISTS "Usuarios pueden eliminar sus propios favoritos" ON public.medicamentos_favoritos;
 CREATE POLICY "Usuarios pueden eliminar sus propios favoritos"
   ON public.medicamentos_favoritos FOR DELETE
   USING (auth.uid() = usuario_id);
@@ -303,7 +319,7 @@ INSERT INTO public.medicamentos (
     12,
     'NOAH'
   )
-ON CONFLICT DO NOTHING;
+ON CONFLICT (nombre, principio_activo, familia_terapeutica, presentacion, concentracion) DO NOTHING;
 
 -- ============================================================================
 -- COMENTARIOS

@@ -14,7 +14,7 @@ Configurar Supabase localmente y verificar que LunaVet funcione end-to-end.
 - [x] #1: Instalar Supabase CLI ✅
 - [x] #2: Iniciar servicios locales de Supabase ✅
 - [x] #3: Aplicar migraciones (crear schema) ✅
-- [x] #4: Cargar seed data (27 medicamentos) ✅
+- [x] #4: Cargar seed data (21 medicamentos idempotentes) ✅
 - [x] #5: Configurar archivo .env con credenciales locales ✅
 - [x] #6: Iniciar app y verificar conexión a Supabase ✅
 - [x] #7: Probar páginas (Home, Medicamentos, Calculadora) ✅
@@ -41,8 +41,9 @@ Configurar Supabase localmente y verificar que LunaVet funcione end-to-end.
 ## Verificación Final
 
 - ✅ Supabase local corriendo en Docker (11 contenedores healthy)
-- ✅ 27 medicamentos cargados en la base de datos
+- ✅ 21 medicamentos cargados en la base de datos sin duplicados
 - ✅ App React corriendo en http://localhost:3000
 - ✅ API Supabase accesible en http://127.0.0.1:54321
 - ✅ Todas las páginas funcionando (Home, Medicamentos, Calculadora)
 - ✅ Conexión end-to-end verificada
+- ✅ Migración y seed re-ejecutables: `supabase db reset` limpio; re-aplicar SQL manualmente no duplica datos
