@@ -14,6 +14,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Supabase local runtime
+supabase/.branches/
+supabase/.temp/
+
 # Editores
 .vscode/
 .idea/
