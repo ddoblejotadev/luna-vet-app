@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import medicamentosService from '../services/medicamentosService'
 import './pages.css'
 
@@ -115,7 +116,9 @@ export default function MedicamentosPage() {
           {medicamentos.map((med) => (
             <div key={med.id} className="medicamento-card">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--gray-900)' }}>{med.nombre}</h3>
+                <Link to={`/medicamentos/${med.id}`} style={{ margin: 0, fontSize: '1.2rem', color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
+                  {med.nombre}
+                </Link>
                 <span className={`badge risk-${med.nivel_riesgo || 'normal'}`}>
                   {med.nivel_riesgo || 'normal'}
                 </span>
@@ -168,6 +171,9 @@ export default function MedicamentosPage() {
                     </ul>
                   </div>
                 )}
+                <Link to={`/medicamentos/${med.id}`} className="btn btn-secondary" style={{ marginTop: '0.75rem', display: 'inline-block', fontSize: '0.85rem', padding: '0.5rem 1rem' }}>
+                  Ver ficha
+                </Link>
               </div>
             </div>
           ))}

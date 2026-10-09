@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import ReporteDosis from '../components/ReporteDosis'
 import { useDosisCalculator } from '../hooks/useDosisCalculator'
 import medicamentosService from '../services/medicamentosService'
 import historialService from '../services/historialService'
@@ -8,6 +9,7 @@ import './pages.css'
 
 export default function CalculadoraPage() {
   const { user } = useAuth()
+  const [searchParams] = useSearchParams()
   const {
     resultado,
     error,
@@ -74,6 +76,24 @@ export default function CalculadoraPage() {
       isMounted = false
     }
   }, [])
+
+  useEffect(() => {
+    const medicamentoParam = searchParams.get('medicamento')
+    if (!medicamentoParam || medicamentos.length === 0) return
+
+    const med = medicamentos.find((item) => item.id === medicamentoParam)
+    if (!med) return
+
+    setMedicamentoId(med.id)
+    if (med.especies_permitidas?.length > 0) {
+      setSelectedEspecie(med.especies_permitidas[0])
+    }
+    if (med.dosis_minima_mg_kg && med.dosis_maxima_mg_kg) {
+      setMetodo('catalogo')
+      setDosisMinPorKg(String(med.dosis_minima_mg_kg))
+      setDosisMaxPorKg(String(med.dosis_maxima_mg_kg))
+    }
+  }, [searchParams, medicamentos])
 
   const filteredMedicamentos = useMemo(() => {
     if (!selectedEspecie) return medicamentos
@@ -148,6 +168,10 @@ export default function CalculadoraPage() {
     resetear()
     setSaved(false)
     setSaveError(null)
+  }
+
+  const handlePrintReport = () => {
+    window.print()
   }
 
   const handleGuardarHistorial = async () => {
@@ -311,7 +335,7 @@ export default function CalculadoraPage() {
                 className="form-control"
               >
                 {especies.map((esp) => (
-                  <option key={esp.id} value={esp.nombre}>
+                  <option key={esp.id || esp.nombre} value={esp.nombre}>
                     {esp.nombre}
                   </option>
                 ))}
@@ -575,7 +599,7 @@ export default function CalculadoraPage() {
 
           {resultado && (
             <div className="resultado-content">
-              <div className="resultado-card">
+              <div className="resultado-card screen-only">
                 {resultado.dosisMinSingle !== undefined ? (
                   <>
                     <p><strong>Dosis Mínima por Toma:</strong> {resultado.dosisMinSingle} {resultado.unidad}</p>
@@ -598,7 +622,21 @@ export default function CalculadoraPage() {
                 <p><strong>Frecuencia:</strong> Cada {resultado.frecuencia} horas</p>
                 {resultado.bsa && <p><strong>Superficie Corporal (BSA):</strong> {resultado.bsa} m²</p>}
                 {resultado.notas && <p className="notas-clinicas"><strong>Indicación:</strong> {resultado.notas}</p>}
+                <div className="resultado-actions">
+                  <button type="button" className="btn btn-primary" onClick={handlePrintReport}>
+                    Imprimir / guardar PDF
+                  </button>
+                </div>
               </div>
+
+              <ReporteDosis
+                medicamento={selectedMedicamento}
+                especie={selectedEspecie}
+                peso={peso}
+                metodo={metodo}
+                resultado={resultado}
+                margen={margen}
+              />
 
               {user ? (
                 <div className="historial-save-box" style={{ marginTop: '1.5rem' }}>

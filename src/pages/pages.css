@@ -776,3 +776,259 @@ legend {
   margin: 2rem auto;
 }
 
+
+/* MEDICATION DETAIL */
+.back-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.medicamento-detail-card {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  border-left: 6px solid var(--gray-300);
+}
+
+.medicamento-detail-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.medicamento-detail-header h1 {
+  margin-bottom: 0.5rem;
+}
+
+.eyebrow {
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.risk-border-normal {
+  border-left-color: var(--success);
+}
+
+.risk-border-precaucion {
+  border-left-color: #f59e0b;
+}
+
+.risk-border-alto {
+  border-left-color: #f97316;
+}
+
+.risk-border-critico {
+  border-left-color: #dc2626;
+}
+
+.detail-section {
+  border-top: 1px solid var(--gray-200);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.detail-section h2 {
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+  color: var(--gray-900);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.detail-field {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.detail-field span {
+  display: block;
+  color: var(--gray-500);
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.detail-field strong {
+  color: var(--gray-900);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.badge-contraindicada {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 640px) {
+  .medicamento-detail-header {
+    flex-direction: column;
+  }
+
+  .medicamento-detail-card {
+    padding: 1.25rem;
+  }
+}
+
+/* REPORTE DE DOSIS (PANTALLA OCULTO / IMPRESIÓN) */
+.reporte-dosis {
+  display: none;
+}
+
+.resultado-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.reporte-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #111;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.reporte-app {
+  color: var(--primary);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.reporte-header h1 {
+  font-size: 1.4rem;
+  margin: 0;
+  color: #111;
+}
+
+.reporte-fecha {
+  font-size: 0.85rem;
+  color: #444;
+  margin: 0;
+}
+
+.reporte-section {
+  margin-bottom: 1.25rem;
+}
+
+.reporte-section h2 {
+  font-size: 1rem;
+  color: #111;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.reporte-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.2rem 0;
+  font-size: 0.95rem;
+}
+
+.reporte-row span {
+  color: #444;
+}
+
+.reporte-row strong {
+  color: #111;
+  text-align: right;
+}
+
+.reporte-alertas {
+  display: flex;
+  gap: 1rem;
+  padding: 0.2rem 0;
+  font-size: 0.95rem;
+}
+
+.reporte-alertas > span {
+  color: #444;
+}
+
+.reporte-alertas ul {
+  margin: 0;
+  padding-left: 1rem;
+  color: #7f1d1d;
+}
+
+.reporte-footer {
+  border-top: 1px solid #ccc;
+  padding-top: 0.75rem;
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  color: #444;
+}
+
+.reporte-footer p {
+  margin: 0.25rem 0;
+}
+
+.reporte-disclaimer {
+  font-style: italic;
+}
+
+@media print {
+  .screen-only {
+    display: none !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .reporte-dosis {
+    display: block !important;
+    visibility: visible !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    background: #fff;
+    color: #111;
+    box-shadow: none;
+  }
+
+  .reporte-dosis * {
+    visibility: visible !important;
+  }
+}

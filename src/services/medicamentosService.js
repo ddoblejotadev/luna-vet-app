@@ -30,7 +30,7 @@ class MedicamentosService {
 
       if (cleanSearch.length > 0) {
         builder = builder.or(
-          `nombre.ilike.%${cleanSearch}%,principio_activo.ilike.%${cleanSearch}%,familia_terapeutica.ilike.%${cleanSearch}%,dosis_recomendada.ilike.%${cleanSearch}%`
+          `nombre.ilike.%${cleanSearch}%,principio_activo.ilike.%${cleanSearch}%,familia_terapeutica.ilike.%${cleanSearch}%,dosis_recomendada.ilike.%${cleanSearch}%,indicaciones.ilike.%${cleanSearch}%`
         )
       }
     }
@@ -118,6 +118,10 @@ class MedicamentosService {
       console.error('Error fetching medicamento:', error)
       return null
     }
+  }
+
+  async getMedicamentoById(id) {
+    return this.getMedicamento(id)
   }
 
   /**
