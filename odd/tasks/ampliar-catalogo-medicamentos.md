@@ -5,7 +5,9 @@
 **Estado:** done
 **Inicio:** 2026-10-08
 **Branch:** feature/auth-history
-**Migración:** supabase/migrations/202610080002_ampliacion_catalogo_medicamentos.sql (78 fármacos nuevos)
+**Migraciones:**
+- `supabase/migrations/202610080002_ampliacion_catalogo_medicamentos.sql` (78 fármacos nuevos)
+- `supabase/migrations/202610080003_segunda_ampliacion_catalogo.sql` (~104 fármacos nuevos + corrección de duplicado Pimobendan)
 
 ## Contexto y decisiones previas
 
@@ -14,6 +16,7 @@
 - Chile (actual residencia del usuario): el registro local equivalente a SENASA (AR) es el **SAG** (Servicio Agrícola y Ganadero). Las dosis `mg/kg` son **independientes del país**; cambia solo la disponibilidad de marcas.
 - El esquema actual de `medicamentos` es **especie-agnostic** (no hay `especie_id` en la tabla). Se usa la dosis general canina/felina y las diferencias por especie se anotan en `dosis_recomendada` (ej. "Perros 0.5 mg/kg; gatos 0.05 mg/kg").
 - No se modifica la UI: es dinámica (familias + búsqueda), por lo que los nuevos registros se exponen automáticamente.
+- Segunda ampliación: se agregan familias nuevas (`Antifúngicos`, `Anticonvulsivantes`, `Respiratorios / Broncodilatadores`, `Oftálmicos`, `Antivirales`, `Conducta / Psicotrópicos`, `Urológicos`, `Antineoplásicos / Quimioterapia`, `Antídotos / Emergencias`, `Anestésicos Locales`) y se corrige el duplicado `Pimobendan`/`Pimobendán`, conservando `Pimobendán`.
 
 ## Criterios de construcción
 
@@ -62,6 +65,10 @@ Estos registros validan **disponibilidad y marca comercial** en cada país; las 
 - [x] Verificar que la Calculadora funciona con los nuevos fármacos (pruebas de dosis únicas y rangos exitosas).
 - [x] Confirmar fuentes locales: SAG Chile (registro oficial) y SENASA Argentina (Vademécum) validadas y documentadas.
 - [x] Actualizar `odd/tasks/ampliar-catalogo-medicamentos.md` a `done` y guardar en memoria.
+- [x] Generar segunda migración `supabase/migrations/202610080003_segunda_ampliacion_catalogo.sql` con nuevas familias y ~104 fármacos adicionales.
+- [x] Corregir duplicado `Pimobendan`/`Pimobendán` en la migración nueva.
+- [x] Ejecutar `supabase db push --local`: catálogo final verificado en local con **202 fármacos** y **19 familias terapéuticas**.
+- [x] Verificar build (`npm run build`) y muestra REST de fármacos nuevos (`Famciclovir`, `Fenobarbital`, `Grapiprant`, `Miltefosina`).
 
 ## Fuentes de referencia usadas
 
