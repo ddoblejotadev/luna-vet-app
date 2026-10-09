@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
 import './Layout.css'
 
 export default function Layout({ children }) {
+  const { user, signOut } = useAuth()
   return (
     <div className="app">
       <header className="header">
@@ -15,6 +17,24 @@ export default function Layout({ children }) {
             <li><Link to="/medicamentos">Medicamentos</Link></li>
             <li><Link to="/calculadora">Calculadora</Link></li>
           </ul>
+          <div className="navbar-auth">
+            {user ? (
+              <div className="user-session">
+                <span className="navbar-user" title={user.email}>{user.email}</span>
+                <button 
+                  onClick={() => signOut()} 
+                  className="btn btn-secondary btn-signout"
+                  title="Cerrar sesión"
+                >
+                  Salir
+                </button>
+              </div>
+            ) : (
+              <Link to="/login" className="btn btn-primary btn-login-nav">
+                Iniciar sesión
+              </Link>
+            )}
+          </div>
         </nav>
       </header>
 

@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
 import { useDosisCalculator } from '../hooks/useDosisCalculator'
 import medicamentosService from '../services/medicamentosService'
+import historialService from '../services/historialService'
 import './pages.css'
 
 export default function CalculadoraPage() {
+  const { user } = useAuth()
   const {
     resultado,
     error,
@@ -25,6 +29,9 @@ export default function CalculadoraPage() {
   const [frecuencia, setFrecuencia] = useState('12')
   const [metodo, setMetodo] = useState('peso')
   const [margen, setMargen] = useState('10')
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [saveError, setSaveError] = useState(null)
 
   useEffect(() => {
     let isMounted = true
@@ -64,6 +71,8 @@ export default function CalculadoraPage() {
     const nextId = e.target.value
     setMedicamentoId(nextId)
     resetear()
+    setSaved(false)
+    setSaveError(null)
 
     const medicamento = medicamentos.find((item) => item.id === nextId)
 
@@ -89,8 +98,63 @@ export default function CalculadoraPage() {
     }
   }
 
+  const handleReset = () => {
+    resetear()
+    setSaved(false)
+    setSaveError(null)
+  }
+
+  const handleGuardarHistorial = async () => {
+    if (!user || saving || saved) return
+
+    setSaving(true)
+    setSaveError(null)
+
+    try {
+      const pesoNum = parseFloat(peso)
+      if (isNaN(pesoNum) || pesoNum <= 0) {
+        throw new Error('Peso inválido para guardar')
+      }
+
+      let payload = {
+        usuario_id: user.id,
+        medicamento_id: medicamentoId || null,
+        peso_kg: pesoNum,
+        metodo_calculo: metodo,
+        frecuencia_horas: frecuencia ? parseInt(frecuencia, 10) : null,
+        notas: resultado?.notas || null,
+      }
+
+      if (metodo === 'catalogo') {
+        payload.dosis_minima_calculada = resultado?.dosisMinSingle !== undefined ? resultado.dosisMinSingle : null
+        payload.dosis_maxima_calculada = resultado?.dosisMaxSingle !== undefined ? resultado.dosisMaxSingle : null
+        payload.dosis_minima_mg_kg = dosisMinPorKg ? parseFloat(dosisMinPorKg) : (selectedMedicamento?.dosis_minima_mg_kg || null)
+        payload.dosis_maxima_mg_kg = dosisMaxPorKg ? parseFloat(dosisMaxPorKg) : (selectedMedicamento?.dosis_maxima_mg_kg || null)
+        payload.dosis_calculada = null
+      } else if (metodo === 'peso') {
+        payload.dosis_calculada = resultado?.dosisSingle !== undefined ? resultado.dosisSingle : null
+      } else if (metodo === 'bsa') {
+        payload.dosis_calculada = resultado?.dosisSingle !== undefined ? resultado.dosisSingle : null
+      } else if (metodo === 'margen') {
+        payload.dosis_calculada = resultado?.dosisBase !== undefined ? resultado.dosisBase : (resultado?.dosisSingle !== undefined ? resultado.dosisSingle : null)
+      } else {
+        payload.dosis_calculada = resultado?.dosisSingle !== undefined ? resultado.dosisSingle : null
+      }
+
+      await historialService.createHistorial(payload)
+      setSaved(true)
+    } catch (err) {
+      console.error('Error saving historial:', err)
+      setSaveError(err.message || 'No se pudo guardar el cálculo en el historial')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const handleCalcular = (e) => {
     e.preventDefault()
+    setSaved(false)
+    setSaveError(null)
 
     if (!peso) {
       alert('Por favor ingresá el peso del animal')
@@ -360,7 +424,7 @@ export default function CalculadoraPage() {
               <button type="submit" className="btn btn-primary">
                 Calcular Dosis
               </button>
-              <button type="button" onClick={resetear} className="btn btn-secondary">
+              <button type="button" onClick={handleReset} className="btn btn-secondary">
                 Limpiar
               </button>
             </div>
@@ -432,6 +496,30 @@ export default function CalculadoraPage() {
               {resultado.notas && (
                 <p className="notas">{resultado.notas}</p>
               )}
+
+              <div className="historial-action-section">
+                {user ? (
+                  <div className="historial-save-box">
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-save-historial"
+                      onClick={handleGuardarHistorial}
+                      disabled={saving || saved}
+                    >
+                      {saving ? 'Guardando...' : saved ? 'Guardado en historial' : 'Guardar en historial'}
+                    </button>
+                    {saved && <p className="success-text">¡Cálculo guardado en tu historial exitosamente!</p>}
+                    {saveError && <p className="error-text">{saveError}</p>}
+                  </div>
+                ) : (
+                  <div className="auth-guidance-box">
+                    <p>
+                      ¿Querés guardar este cálculo en tu historial?{' '}
+                      <Link to="/login" className="auth-link">Iniciá sesión</Link> o registrate.
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 

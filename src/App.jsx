@@ -3,18 +3,24 @@ import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
 import MedicamentosPage from './pages/MedicamentosPage'
 import CalculadoraPage from './pages/CalculadoraPage'
+import AuthPage from './pages/AuthPage'
+import { AuthProvider } from './context/AuthContext'
 import './App.css'
 
 function App() {
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/medicamentos" element={<MedicamentosPage />} />
-        <Route path="/calculadora" element={<CalculadoraPage />} />
-      </Routes>
-    </Layout>
+    <AuthProvider>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/medicamentos" element={<MedicamentosPage />} />
+          <Route path="/calculadora" element={<CalculadoraPage />} />
+          <Route path="/login" element={<AuthPage />} />
+        </Routes>
+      </Layout>
+    </AuthProvider>
   )
 }
 
 export default App
+
