@@ -29,6 +29,7 @@ const formatNumber = (value, suffix = '') => {
 function HistorialRow({ calculo }) {
   const isRange = calculo.dosis_minima_calculada !== null && calculo.dosis_maxima_calculada !== null
   const medicamentoNombre = calculo.medicamentos?.nombre || 'Sin medicamento asociado'
+  const especieNombre = calculo.especies?.nombre || 'Sin especie'
   const metodo = METHOD_LABELS[calculo.metodo_calculo] || calculo.metodo_calculo
 
   return (
@@ -45,6 +46,10 @@ function HistorialRow({ calculo }) {
         <div>
           <span className="label">Peso</span>
           <strong>{formatNumber(calculo.peso_kg, ' kg')}</strong>
+        </div>
+        <div>
+          <span className="label">Especie</span>
+          <strong>{especieNombre}</strong>
         </div>
         <div>
           <span className="label">Frecuencia</span>

@@ -28,7 +28,7 @@ export const historialService = {
   async getHistorialForUser(userId) {
     const { data, error } = await supabase
       .from('historial_calculos')
-      .select('*, medicamentos(nombre, principio_activo)')
+      .select('*, medicamentos(nombre, principio_activo), especies(nombre)' )
       .eq('usuario_id', userId)
       .order('created_at', { ascending: false })
 
