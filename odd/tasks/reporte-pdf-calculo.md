@@ -35,3 +35,9 @@
 - Reporte incluye paciente, especie, peso, medicamento, principio activo, resultado, frecuencia, alertas, fuente y disclaimer veterinario.
 - `npm run build` OK (437.71 kB JS).
 - App responde HTTP 200 en `http://localhost:3000`.
+
+## Extensión educativa
+
+- Se agregaron campos de estudio a la ficha: composición, mecanismo de acción y uso para estudio.
+- Se refinó la ficha para mostrar contraindicaciones, efectos secundarios, interacciones y notas educativas.
+- Se poblaron textos educativos por familia terapéutica sin inventar registros oficiales SAG/SENASA.

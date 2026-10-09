@@ -1032,3 +1032,53 @@ legend {
     visibility: visible !important;
   }
 }
+
+/* FICHA EDUCATIVA DEL MEDICAMENTO */
+.study-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.study-highlight-grid > div {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.study-highlight-grid span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.study-highlight-grid strong {
+  color: var(--text);
+}
+
+.detail-text {
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.clinical-alert-box {
+  background: rgba(127, 29, 29, 0.08);
+  border: 1px solid rgba(127, 29, 29, 0.3);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+}
+
+.clinical-alert-box ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: #7f1d1d;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}

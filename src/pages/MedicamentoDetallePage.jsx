@@ -38,6 +38,17 @@ function BadgeList({ label, items, className = 'badge' }) {
   )
 }
 
+function TextSection({ title, children }) {
+  if (!children) return null
+
+  return (
+    <section className="detail-section">
+      <h2>{title}</h2>
+      <p className="detail-text">{children}</p>
+    </section>
+  )
+}
+
 export default function MedicamentoDetallePage() {
   const { id } = useParams()
   const [medicamento, setMedicamento] = useState(null)
@@ -130,6 +141,7 @@ export default function MedicamentoDetallePage() {
           <h2>Identificación</h2>
           <div className="detail-grid">
             <Field label="Principio activo" value={medicamento.principio_activo || EMPTY_VALUE} />
+            <Field label="Composición" value={medicamento.composicion || EMPTY_VALUE} />
             <Field label="Familia terapéutica" value={medicamento.familia_terapeutica || EMPTY_VALUE} />
             <Field label="Presentación" value={medicamento.presentacion || EMPTY_VALUE} />
             <Field label="Concentración" value={medicamento.concentracion || EMPTY_VALUE} />
@@ -139,11 +151,34 @@ export default function MedicamentoDetallePage() {
         </section>
 
         <section className="detail-section">
+          <h2>Resumen para estudio</h2>
+          <div className="study-highlight-grid">
+            <div>
+              <span>Qué mirar primero</span>
+              <strong>Principio activo + especie segura + dosis</strong>
+            </div>
+            <div>
+              <span>Antes de usar</span>
+              <strong>Contraindicaciones, interacciones y alertas</strong>
+            </div>
+          </div>
+        </section>
+
+        <TextSection title="Mecanismo de acción">
+          {medicamento.mecanismo_accion}
+        </TextSection>
+
+        <TextSection title="Uso para estudio">
+          {medicamento.uso_estudio}
+        </TextSection>
+
+        <section className="detail-section">
           <h2>Dosis y uso clínico</h2>
           <div className="detail-grid">
             <Field label="Dosis recomendada" value={medicamento.dosis_recomendada || EMPTY_VALUE} />
             <Field label="Rango mg/kg" value={dosageRange || EMPTY_VALUE} />
             <Field label="Frecuencia" value={medicamento.frecuencia_horas ? `Cada ${medicamento.frecuencia_horas} horas` : EMPTY_VALUE} />
+            <Field label="Vía de administración" value={medicamento.via_administracion || EMPTY_VALUE} />
             <Field label="Conservación" value={medicamento.conservacion || EMPTY_VALUE} />
           </div>
         </section>
@@ -163,6 +198,22 @@ export default function MedicamentoDetallePage() {
             </div>
           </section>
         )}
+
+        <TextSection title="Contraindicaciones">
+          {medicamento.contraindicaciones}
+        </TextSection>
+
+        <TextSection title="Efectos secundarios">
+          {medicamento.efectos_secundarios}
+        </TextSection>
+
+        <TextSection title="Interacciones">
+          {medicamento.interacciones}
+        </TextSection>
+
+        <TextSection title="Notas educativas">
+          {medicamento.notas}
+        </TextSection>
 
         <section className="detail-section">
           <h2>Registros y fuente</h2>
