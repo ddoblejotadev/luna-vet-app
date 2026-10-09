@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage'
 import MedicamentosPage from './pages/MedicamentosPage'
 import MedicamentoDetallePage from './pages/MedicamentoDetallePage'
 import CalculadoraPage from './pages/CalculadoraPage'
+import EstudioPage from './pages/EstudioPage'
 import AuthPage from './pages/AuthPage'
 import { AuthProvider } from './context/AuthContext'
 import './App.css'
@@ -17,6 +18,7 @@ function App() {
           <Route path="/medicamentos" element={<MedicamentosPage />} />
           <Route path="/medicamentos/:id" element={<MedicamentoDetallePage />} />
           <Route path="/calculadora" element={<CalculadoraPage />} />
+          <Route path="/estudio" element={<EstudioPage />} />
           <Route path="/login" element={<AuthPage />} />
         </Routes>
       </Layout>

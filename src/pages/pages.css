@@ -1082,3 +1082,121 @@ legend {
   flex-direction: column;
   gap: 0.35rem;
 }
+
+/* MODO ESTUDIO */
+.page-header-with-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.lead-small {
+  color: var(--muted);
+  margin: 0.25rem 0 0;
+  font-size: 0.95rem;
+}
+
+.study-controls {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.study-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.study-card-topline {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.study-card h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text);
+}
+
+.study-answer {
+  border: 1px dashed var(--border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: var(--surface);
+}
+
+.study-answer.visible {
+  border-style: solid;
+  border-color: var(--primary);
+  background: rgba(22, 163, 74, 0.06);
+}
+
+.study-answer p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.study-alerts {
+  background: rgba(127, 29, 29, 0.08);
+  border: 1px solid rgba(127, 29, 29, 0.3);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: #7f1d1d;
+}
+
+.study-alerts ul {
+  margin: 0.25rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.study-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.study-links {
+  display: flex;
+  gap: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.study-links a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.study-links a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .study-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .study-card {
+    padding: 1rem;
+  }
+
+  .study-card-actions {
+    flex-direction: column;
+  }
+}

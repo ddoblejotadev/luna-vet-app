@@ -15,6 +15,7 @@ export default function Layout({ children }) {
           <ul className="nav-links">
             <li><Link to="/">Inicio</Link></li>
             <li><Link to="/medicamentos">Medicamentos</Link></li>
+            <li><Link to="/estudio">Estudio</Link></li>
             <li><Link to="/calculadora">Calculadora</Link></li>
           </ul>
           <div className="navbar-auth">
