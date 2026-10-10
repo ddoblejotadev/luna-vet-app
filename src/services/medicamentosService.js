@@ -46,6 +46,7 @@ class MedicamentosService {
       const query = supabase
         .from('medicamentos')
         .select('*')
+        .eq('activo', true)
         .order('nombre', { ascending: true })
 
       const { data, error } = await this.applyMedicamentosFilters(query, filters)

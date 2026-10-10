@@ -413,6 +413,9 @@ export default function CalculadoraPage() {
                 {selectedMedicamento.dosis_recomendada && (
                   <p><strong>Dosis recomendada:</strong> {selectedMedicamento.dosis_recomendada}</p>
                 )}
+                {selectedMedicamento.via_administracion && (
+                  <p><strong>Vía de administración:</strong> {selectedMedicamento.via_administracion}</p>
+                )}
                 <div style={{ marginTop: '0.5rem' }}>
                   <span className={`badge risk-${selectedMedicamento.nivel_riesgo || 'normal'}`}>
                     Riesgo: {selectedMedicamento.nivel_riesgo || 'normal'}
