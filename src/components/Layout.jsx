@@ -34,9 +34,10 @@ export default function Layout({ children }) {
           <div className={`navbar-collapse ${menuOpen ? 'is-open' : ''}`}>
             <ul className="nav-links">
               <li><NavLink to="/" className={navLinkClass} onClick={closeMenu}>Inicio</NavLink></li>
-              <li><NavLink to="/medicamentos" className={navLinkClass} onClick={closeMenu}>Medicamentos</NavLink></li>
-              <li><NavLink to="/estudio" className={navLinkClass} onClick={closeMenu}>Estudio</NavLink></li>
               <li><NavLink to="/calculadora" className={navLinkClass} onClick={closeMenu}>Calculadora</NavLink></li>
+              <li><NavLink to="/medicamentos" className={navLinkClass} onClick={closeMenu}>Medicamentos</NavLink></li>
+              <li><NavLink to="/historial" className={navLinkClass} onClick={closeMenu}>Historial</NavLink></li>
+              <li><NavLink to="/estudio" className={navLinkClass} onClick={closeMenu}>Estudio</NavLink></li>
             </ul>
 
             <div className="navbar-auth">

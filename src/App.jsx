@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage'
 import MedicamentosPage from './pages/MedicamentosPage'
 import MedicamentoDetallePage from './pages/MedicamentoDetallePage'
 import CalculadoraPage from './pages/CalculadoraPage'
+import HistorialPage from './pages/HistorialPage'
 import EstudioPage from './pages/EstudioPage'
 import AuthPage from './pages/AuthPage'
 import { AuthProvider } from './context/AuthContext'
@@ -18,6 +19,7 @@ function App() {
           <Route path="/medicamentos" element={<MedicamentosPage />} />
           <Route path="/medicamentos/:id" element={<MedicamentoDetallePage />} />
           <Route path="/calculadora" element={<CalculadoraPage />} />
+          <Route path="/historial" element={<HistorialPage />} />
           <Route path="/estudio" element={<EstudioPage />} />
           <Route path="/login" element={<AuthPage />} />
         </Routes>

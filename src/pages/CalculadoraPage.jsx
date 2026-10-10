@@ -372,6 +372,7 @@ export default function CalculadoraPage() {
       }
 
       const frecuenciaNum = parseInt(frecuencia, 10) || 12
+      let resultObj = null;
 
       switch (metodo) {
         case 'peso': {
@@ -382,7 +383,7 @@ export default function CalculadoraPage() {
             return
           }
 
-          calcularPorPeso(pesoNum, dosisNum, frecuenciaNum)
+          resultObj = calcularPorPeso(pesoNum, dosisNum, frecuenciaNum)
           break
         }
         case 'catalogo': {
@@ -394,7 +395,7 @@ export default function CalculadoraPage() {
             return
           }
 
-          calcularRangoPorPeso(pesoNum, minNum, maxNum, frecuenciaNum)
+          resultObj = calcularRangoPorPeso(pesoNum, minNum, maxNum, frecuenciaNum)
           break
         }
         case 'bsa': {
@@ -405,7 +406,7 @@ export default function CalculadoraPage() {
             return
           }
 
-          calcularPorBSA(pesoNum, dosisNum, frecuenciaNum)
+          resultObj = calcularPorBSA(pesoNum, dosisNum, frecuenciaNum)
           break
         }
         case 'margen': {
@@ -416,12 +417,38 @@ export default function CalculadoraPage() {
             return
           }
 
-          calcularConMargen(pesoNum, dosisNum, parseInt(margen))
+          resultObj = calcularConMargen(pesoNum, dosisNum, parseInt(margen))
           break
         }
         default:
           break
       }
+
+      // Validar techos absolutos (mg/kg) para fármacos críticos (lidocaína, bupivacaína, etc.)
+      if (resultObj && selectedMedicamento?.nombre) {
+        const checkDosisMaxima = (maxPermitido, medRegex) => {
+          if (medRegex.test(normalizar(selectedMedicamento.nombre))) {
+            const dosisDada = resultObj.dosisMaxSingle 
+              ? (resultObj.dosisMaxSingle / pesoNum) 
+              : (resultObj.dosisSingle ? (resultObj.dosisSingle / pesoNum) : null);
+              
+            if (dosisDada !== null && dosisDada > maxPermitido) {
+              return `¡Atención! La dosis calculada (${dosisDada.toFixed(2)} mg/kg) supera el máximo de seguridad general para este fármaco (${maxPermitido} mg/kg).`;
+            }
+          }
+          return null;
+        }
+
+        const max_warnings = [
+          checkDosisMaxima(8, /lidocaina/),     // Límite aprox lidocaína perro (8 mg/kg total dia)
+          checkDosisMaxima(2, /bupivacaina/)      // Límite aprox bupi perro (2 mg/kg total)
+        ].filter(Boolean);
+
+        if (max_warnings.length > 0) {
+           setResultado(prev => ({...prev, maxWarning: max_warnings[0]}))
+        }
+      }
+
     } catch (err) {
       console.error('Calculation error:', err)
     }
@@ -726,6 +753,9 @@ export default function CalculadoraPage() {
                       {selectedMedicamento.indicaciones && (
                         <p className="med-card-indicaciones"><strong>Indicaciones:</strong> {selectedMedicamento.indicaciones}</p>
                       )}
+                      <p className="med-card-disclaimer" style={{ marginTop: '0.75rem', fontSize: '0.82rem', color: 'var(--text-muted, #6b7280)', fontStyle: 'italic', borderTop: '1px dashed var(--border, #e5e7eb)', paddingTop: '0.5rem' }}>
+                        Nota: Las dosis sugeridas son bibliográficas. Confirmá siempre con el veterinario responsable antes de usarlas clínicamente.
+                      </p>
                     </div>
                   )}
 
@@ -923,6 +953,11 @@ export default function CalculadoraPage() {
                     )}
                     <p><strong>Frecuencia:</strong> Cada {resultado.frecuencia} horas</p>
                     {resultado.bsa && <p><strong>Superficie Corporal (BSA):</strong> {resultado.bsa} m²</p>}
+                    {resultado.maxWarning && (
+                      <div style={{ marginTop: '1rem', padding: '0.75rem', backgroundColor: '#fffbeb', borderLeft: '4px solid var(--warning, #f59e0b)', borderRadius: '4px' }}>
+                        <strong style={{color: '#92400e'}}>{resultado.maxWarning}</strong>
+                      </div>
+                    )}
                     {resultado.notas && <p className="notas-clinicas"><strong>Indicación:</strong> {resultado.notas}</p>}
                     <div className="resultado-actions">
                       <button type="button" className="btn btn-primary" onClick={handlePrintReport}>
