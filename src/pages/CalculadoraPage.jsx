@@ -26,6 +26,8 @@ export default function CalculadoraPage() {
   const [medicamentosLoading, setMedicamentosLoading] = useState(true)
   const [medicamentosError, setMedicamentosError] = useState(null)
   const [medicamentoId, setMedicamentoId] = useState('')
+  const [medicamentoSearch, setMedicamentoSearch] = useState('')
+  const [showSuggestions, setShowSuggestions] = useState(false)
   const [peso, setPeso] = useState('')
   const [dosisPorKg, setDosisPorKg] = useState('')
   const [dosisMinPorKg, setDosisMinPorKg] = useState('')
@@ -96,11 +98,28 @@ export default function CalculadoraPage() {
   }, [searchParams, medicamentos])
 
   const filteredMedicamentos = useMemo(() => {
-    if (!selectedEspecie) return medicamentos
-    return medicamentos.filter(
-      (med) => med.especies_permitidas && med.especies_permitidas.includes(selectedEspecie)
-    )
-  }, [medicamentos, selectedEspecie])
+    if (!medicamentoSearch.trim()) return medicamentos.slice(0, 10)
+    const search = medicamentoSearch.toLowerCase()
+    return medicamentos
+      .filter(med =>
+        med.nombre?.toLowerCase().includes(search) ||
+        med.principio_activo?.toLowerCase().includes(search) ||
+        med.familia_terapeutica?.toLowerCase().includes(search)
+      )
+      .slice(0, 8)
+  }, [medicamentos, medicamentoSearch])
+
+  const handleSelectMedicamento = (med) => {
+    setMedicamentoId(med.id)
+    setMedicamentoSearch(med.nombre)
+    setShowSuggestions(false)
+  }
+
+  const handleSearchChange = (e) => {
+    setMedicamentoSearch(e.target.value)
+    setShowSuggestions(true)
+    if (!e.target.value) setMedicamentoId('')
+  }
 
   const selectedMedicamento = useMemo(
     () => medicamentos.find((medicamento) => medicamento.id === medicamentoId) || null,
@@ -342,26 +361,38 @@ export default function CalculadoraPage() {
               </select>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="medicamento">Medicamento (Catálogo)</label>
-              {medicamentosLoading ? (
-                <p>Cargando medicamentos...</p>
-              ) : medicamentosError ? (
-                <p className="error-text">{medicamentosError}</p>
-              ) : (
-                <select
-                  id="medicamento"
-                  value={medicamentoId}
-                  onChange={handleMedicamentoChange}
-                  className="form-control"
-                >
-                  <option value="">-- Seleccionar medicamento (Opcional) --</option>
+            <div className="form-group" style={{ position: 'relative' }}>
+              <label htmlFor="medicamento-search">Buscar medicamento</label>
+              <input
+                id="medicamento-search"
+                type="text"
+                value={medicamentoSearch}
+                onChange={handleSearchChange}
+                onFocus={() => setShowSuggestions(true)}
+                placeholder="Escribe el nombre..."
+                className="form-control"
+                autoComplete="off"
+              />
+              {showSuggestions && filteredMedicamentos.length > 0 && (
+                <ul style={{
+                  position: 'absolute', top: '100%', left: 0, right: 0,
+                  background: 'white', border: '1px solid #ddd', borderRadius: '4px',
+                  listStyle: 'none', padding: 0, margin: '4px 0 0', maxHeight: '240px',
+                  overflowY: 'auto', zIndex: 1000, boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                }}>
                   {filteredMedicamentos.map((med) => (
-                    <option key={med.id} value={med.id}>
-                      {med.nombre} {med.principio_activo ? `(${med.principio_activo})` : ''}
-                    </option>
+                    <li key={med.id} onClick={() => handleSelectMedicamento(med)}
+                      style={{ padding: '10px 12px', cursor: 'pointer', borderBottom: '1px solid #eee' }}
+                      onMouseOver={(e) => e.target.style.background = '#f5f5f5'}
+                      onMouseOut={(e) => e.target.style.background = 'white'}>
+                      <div style={{ fontWeight: 600, color: 'var(--primary)' }}>{med.nombre}</div>
+                      <div style={{ fontSize: '0.85em', color: '#666' }}>
+                        {med.principio_activo && <span>{med.principio_activo} • </span>}
+                        {med.familia_terapeutica}
+                      </div>
+                    </li>
                   ))}
-                </select>
+                </ul>
               )}
             </div>
 
