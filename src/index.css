@@ -1,24 +1,59 @@
 :root {
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --secondary: #7c3aed;
-  --success: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
-  --radius: 0.5rem;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  /* ── Paleta pastel LunaVet ───────────────────────────── */
+  --primary: #F472B6;          /* rosa vivo */
+  --primary-dark: #DB2777;     /* rosa profundo (texto/contraste) */
+  --primary-soft: #FCE7F3;     /* rosa pastel */
+  --secondary: #A78BFA;        /* lavanda */
+  --secondary-soft: #EDE9FE;
+  --mint: #6EE7B7;
+  --mint-soft: #D1FAE5;
+  --success: #34D399;
+  --danger: #EF4444;
+  --danger-soft: #FEE2E2;
+  --warning: #F59E0B;
+  --warning-soft: #FEF3C7;
+
+  /* Grises cálidos (compatibilidad con clases legacy) */
+  --gray-50: #FFF7FB;
+  --gray-100: #FBF3F8;
+  --gray-200: #F5E8F0;
+  --gray-300: #E8D5E3;
+  --gray-400: #B89BB4;
+  --gray-500: #8A6F85;
+  --gray-600: #6B5567;
+  --gray-700: #4E3D4B;
+  --gray-800: #382C35;
+  --gray-900: #2A2129;
+
+  /* Layout / theming */
+  --cream: #FFF7FB;
+  --card: #FFFFFF;
+  --ink: #43304F;
+  --ink-soft: #7A6480;
+
+  /* Variables legacy de pages.css/Layout.css (alias) */
+  --bg-card: var(--card);
+  --bg-main: var(--cream);
+  --border-color: var(--gray-200);
+  --text-primary: var(--ink);
+  --text-secondary: var(--gray-600);
+  --text-tertiary: var(--gray-500);
+  --primary-color: var(--primary);
+  --radius-md: var(--radius);
+  --spacing-xs: 0.35rem;
+  --spacing-sm: 0.65rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --transition-fast: 0.15s ease;
+  --risk-critico: #EF4444;
+
+  --radius: 1rem;
+  --radius-lg: 1.5rem;
+  --shadow-sm: 0 1px 2px 0 rgba(190, 120, 160, 0.06);
+  --shadow: 0 2px 8px -2px rgba(190, 120, 160, 0.12);
+  --shadow-lg: 0 12px 28px -8px rgba(190, 120, 160, 0.22);
+  --shadow-pink: 0 6px 18px -6px rgba(244, 114, 182, 0.45);
 }
 
 * {
@@ -29,21 +64,27 @@
 
 html {
   font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--gray-50);
-  color: var(--gray-900);
+  background-color: var(--cream);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(244, 114, 182, 0.10), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 0%, rgba(167, 139, 250, 0.10), transparent);
+  background-attachment: fixed;
+  color: var(--ink);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
-  line-height: 1.2;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--ink);
 }
 
 button {
@@ -56,15 +97,25 @@ button {
 
 input, textarea, select {
   font-family: inherit;
-  font-size: inherit;
+  font-size: 1rem;
 }
 
 a {
-  color: var(--primary);
+  color: var(--primary-dark);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: var(--primary-dark);
+  color: var(--primary);
+}
+
+/* Tap targets cómodos en móvil */
+@media (pointer: coarse) {
+  button, a, .nav-link {
+    min-height: 44px;
+  }
+  input, select {
+    min-height: 44px;
+  }
 }

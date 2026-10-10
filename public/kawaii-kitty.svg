@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Gatito kawaii original de LunaVet: redondo, blanco, con moño rosa -->
+  <circle cx="32" cy="34" r="24" fill="#FFFFFF" stroke="#F472B6" stroke-width="2.5"/>
+  <!-- Orejas -->
+  <path d="M12 22 L18 8 L26 18 Z" fill="#FFFFFF" stroke="#F472B6" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M52 22 L46 8 L38 18 Z" fill="#FFFFFF" stroke="#F472B6" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M16 19 L19 12 L23 17 Z" fill="#FCE7F3"/>
+  <path d="M48 19 L45 12 L41 17 Z" fill="#FCE7F3"/>
+  <!-- Moño (estilo kawaii) -->
+  <path d="M32 10 C26 2 16 4 16 10 C16 15 24 16 32 12 C40 16 48 15 48 10 C48 4 38 2 32 10 Z" fill="#F472B6"/>
+  <circle cx="32" cy="11" r="2.6" fill="#DB2777"/>
+  <!-- Ojos cerrados felices -->
+  <path d="M20 32 Q24 28 28 32" fill="none" stroke="#43304F" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M36 32 Q40 28 44 32" fill="none" stroke="#43304F" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Nariz y boca -->
+  <path d="M30 37 Q32 39 34 37 Q32 41 30 37 Z" fill="#F472B6"/>
+  <path d="M32 41 Q32 44 29 44 M32 41 Q32 44 35 44" fill="none" stroke="#43304F" stroke-width="2" stroke-linecap="round"/>
+  <!-- Cachetes -->
+  <ellipse cx="18" cy="38" rx="3.5" ry="2.2" fill="#FCE7F3"/>
+  <ellipse cx="46" cy="38" rx="3.5" ry="2.2" fill="#FCE7F3"/>
+</svg>

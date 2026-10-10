@@ -2,6 +2,7 @@ import { Link, useParams, useLocation } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 import medicamentosService from '../services/medicamentosService'
 import { interaccionesPara } from '../data/interacciones'
+import KawaiiSticker from '../components/KawaiiSticker'
 import './pages.css'
 
 const RISK_LABELS = {
@@ -11,12 +12,41 @@ const RISK_LABELS = {
   critico: 'Crítico',
 }
 
-const EMPTY_VALUE = 'No informado'
+const RISK_ICONS = {
+  normal: '✅',
+  precaucion: '⚠️',
+  alto: '🔶',
+  critico: '🚨',
+}
 
 const ESPECIES = ['Perro', 'Gato', 'Equino', 'Bovino', 'Ovino', 'Porcino', 'Aves']
 
-function Field({ label, value }) {
-  if (value === null || value === undefined || value === '') return null
+const ICONOS = {
+  calculadora: '🧮',
+  posologia: '💉',
+  farmacologia: '🧪',
+  seguridad: '🛡️',
+  interacciones: '⚡',
+  referencias: '📄',
+}
+
+/**
+ * Componente para campos sin información: discreto, no grita "No informado".
+ */
+function SinDato({ children = 'Sin dato' }) {
+  return <span className="sin-dato">{children}</span>
+}
+
+function Field({ label, value, sinDato = false }) {
+  if (value === null || value === undefined || value === '') {
+    if (!sinDato) return null
+    return (
+      <div className="detail-field">
+        <span>{label}</span>
+        <SinDato />
+      </div>
+    )
+  }
 
   return (
     <div className="detail-field">
@@ -41,21 +71,25 @@ function BadgeList({ label, items, className = 'badge' }) {
   )
 }
 
-function TextSection({ title, children }) {
-  if (!children) return null
+function TextSection({ title, children, placeholder }) {
+  const vacio = children === null || children === undefined || children === ''
 
   return (
     <div className="detail-subsection">
       <h3>{title}</h3>
-      <p className="detail-text">{children}</p>
+      {vacio ? (
+        <SinDato>{placeholder || 'Sin dato'}</SinDato>
+      ) : (
+        <p className="detail-text">{children}</p>
+      )}
     </div>
   )
 }
 
 /**
- * Sección colapsable: solo el título es visible hasta que se abre.
+ * Sección colapsable con icono: solo el título es visible hasta que se abre.
  */
-function Acordeon({ titulo, children, defaultOpen = false, badge }) {
+function Acordeon({ titulo, icono, children, defaultOpen = false, badge }) {
   const [abierto, setAbierto] = useState(defaultOpen)
 
   return (
@@ -67,8 +101,13 @@ function Acordeon({ titulo, children, defaultOpen = false, badge }) {
         aria-expanded={abierto}
       >
         <span className="acordeon-titulo">
-          {titulo}
-          {badge && <span className={`badge risk-${badge}`}>{RISK_LABELS[badge]}</span>}
+          {icono && <span className="acordeon-icono" aria-hidden="true">{icono}</span>}
+          <span>{titulo}</span>
+          {badge && (
+            <span className={`badge risk-${badge}`}>
+              {RISK_ICONS[badge]} {RISK_LABELS[badge]}
+            </span>
+          )}
         </span>
         <span className="acordeon-flecha" aria-hidden="true">{abierto ? '▾' : '▸'}</span>
       </button>
@@ -102,7 +141,7 @@ function CopiarDosis({ texto }) {
       onClick={copiar}
       title="Copiar dosis al portapapeles"
     >
-      {copiado ? '✓ Copiado' : 'Copiar dosis'}
+      {copiado ? '✓ Copiado' : '📋 Copiar'}
     </button>
   )
 }
@@ -162,8 +201,7 @@ function CalculadoraEmbebida({ medicamento, presentacionActiva }) {
   }
 
   return (
-    <section className="detail-section calculadora-embebida">
-      <h2>Calculadora rápida</h2>
+    <section className="calculadora-embebida">
       <div className="calc-inline">
         <div className="calc-input-group">
           <label htmlFor="peso-calc">Peso del paciente (kg)</label>
@@ -172,6 +210,7 @@ function CalculadoraEmbebida({ medicamento, presentacionActiva }) {
             type="number"
             step="0.1"
             min="0.1"
+            inputMode="decimal"
             placeholder="Ej: 15"
             value={peso}
             onChange={(e) => setPeso(e.target.value)}
@@ -206,65 +245,77 @@ function CalculadoraEmbebida({ medicamento, presentacionActiva }) {
           </div>
           {resultado.tieneConc && (
             <div className="calc-row calc-resultado-mL">
-              <span>Volumen:</span>
+              <span>Equivale en mL:</span>
               <strong>{resultado.minMl} – {resultado.maxMl} mL</strong>
-              <span className="calc-note">({concMgMl} mg/mL)</span>
+              <span className="calc-conc">({resultado.concMgMl} mg/mL)</span>
             </div>
           )}
-          <p className="calc-note">
-            {resultado.usaDosisEspecie
-              ? `Rango específico para ${resultado.especie}.`
-              : 'Rango general: verificá la dosis según la especie antes de administrar.'}
-          </p>
+          {resultado.usaDosisEspecie && (
+            <p className="calc-nota-especie">✨ Dosis ajustada para {resultado.especie}</p>
+          )}
         </div>
       )}
 
-      {resultado && resultado.error && (
-        <div className="calc-error">{resultado.error}</div>
+      {resultado?.error && (
+        <div className="calc-error" role="alert">{resultado.error}</div>
       )}
     </section>
   )
 }
 
 /**
- * Guarda la ficha vista en "Vistos recientemente" (localStorage)
+ * Campos que consideramos "pendientes" cuando están vacíos.
  */
-function registrarVista(med) {
-  try {
-    const key = 'lunavet:vistos'
-    const raw = localStorage.getItem(key)
-    const vistos = raw ? JSON.parse(raw) : []
-    const filtrados = vistos.filter((v) => v.id !== med.id)
-    filtrados.unshift({
-      id: med.id,
-      nombre: med.nombre,
-      principio_activo: med.principio_activo,
-      nivel_riesgo: med.nivel_riesgo,
-      ts: Date.now(),
-    })
-    localStorage.setItem(key, JSON.stringify(filtrados.slice(0, 6)))
-  } catch {
-    // localStorage no disponible: sin historial, sin error
-  }
-}
+const CAMPOS_PENDIENTES = [
+  ['dosis_recomendada', 'Dosis'],
+  ['via_administracion', 'Vía'],
+  ['indicaciones', 'Indicaciones'],
+  ['mecanismo_accion', 'Mecanismo'],
+  ['farmacocinetica', 'Farmacocinética'],
+  ['efectos_secundarios', 'Efectos secundarios'],
+  ['contraindicaciones', 'Contraindicaciones'],
+  ['precauciones', 'Precauciones'],
+  ['fuente', 'Fuente'],
+]
 
 export default function MedicamentoDetallePage() {
   const { id } = useParams()
   const location = useLocation()
+
   const [medicamento, setMedicamento] = useState(null)
+  const [presentacionSeleccionada, setPresentacionSeleccionada] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [presentacionSeleccionada, setPresentacionSeleccionada] = useState(null)
 
   useEffect(() => {
     let isMounted = true
 
-    const loadMedicamento = async () => {
+    async function loadMedicamento() {
+      setLoading(true)
+      setError(null)
+      setPresentacionSeleccionada(null)
       try {
-        const data = await medicamentosService.getMedicamentoById(id)
-        if (isMounted) {
-          setMedicamento(data)
-          registrarVista(data)
+        const med = await medicamentosService.getMedicamentoById(id)
+        if (!isMounted) return
+
+        if (!med) {
+          setError('No se encontró el medicamento solicitado.')
+          setMedicamento(null)
+          return
+        }
+
+        setMedicamento(med)
+
+        // Guardar en vistos recientemente (localStorage)
+        try {
+          const stored = JSON.parse(localStorage.getItem('lunavet_recent_meds') || '[]')
+          const updated = [
+            { id: med.id, nombre: med.nombre, familia: med.familia_terapeutica, riesgo: med.nivel_riesgo },
+            ...stored.filter((item) => item.id !== med.id)
+          ].slice(0, 5)
+          localStorage.setItem('lunavet_recent_meds', JSON.stringify(updated))
+        } catch (e) {
+          console.error('Error saving recent meds', e)
         }
       } catch (err) {
         console.error('Error loading medication detail:', err)
@@ -302,9 +353,15 @@ export default function MedicamentoDetallePage() {
     return min === max ? `${min} mg/kg` : `${min} - ${max} mg/kg`
   }, [presentacionActiva])
 
-  const concMgMl = presentacionActiva?.concentracion_mg_ml ?? medicamento?.concentracion_mg_ml
-
   const interacciones = useMemo(() => interaccionesPara(medicamento), [medicamento])
+
+  // Campos pendientes de completar (para avisar con elegancia)
+  const pendientes = useMemo(() => {
+    if (!medicamento) return []
+    return CAMPOS_PENDIENTES
+      .filter(([campo]) => !medicamento[campo])
+      .map(([, label]) => label)
+  }, [medicamento])
 
   if (loading) {
     return (
@@ -329,19 +386,45 @@ export default function MedicamentoDetallePage() {
     )
   }
 
+  const textoDosis = presentacionActiva.dosis_texto
+    || presentacionActiva.dosis_recomendada
+    || medicamento.dosis_recomendada
+
   return (
     <div className="page medicamento-detail-page">
       <Link to={backTo} className="back-link">← Volver al catálogo</Link>
 
       <article className={`medicamento-detail-card risk-border-${riskLevel}`}>
+        {/* ── Header ─────────────────────────────── */}
         <header className="medicamento-detail-header">
-          <div>
-            <p className="eyebrow">Ficha del medicamento</p>
-            <h1>{medicamento.nombre}</h1>
-            <p className="lead-small">{medicamento.indicaciones || 'Indicaciones clínicas pendientes de completar.'}</p>
+          <div className="detail-header-sticker">
+            <KawaiiSticker size={56} alt="" />
           </div>
-          <span className={`badge risk-${riskLevel}`}>{RISK_LABELS[riskLevel] || riskLevel}</span>
+          <div className="detail-header-text">
+            <p className="eyebrow">
+              {medicamento.familia_terapeutica || 'Ficha del medicamento'}
+            </p>
+            <h1>{medicamento.nombre}</h1>
+            {medicamento.principio_activo && (
+              <p className="lead-small">
+                Principio activo: <strong>{medicamento.principio_activo}</strong>
+              </p>
+            )}
+            {medicamento.indicaciones && (
+              <p className="lead-small">{medicamento.indicaciones}</p>
+            )}
+          </div>
+          <span className={`badge risk-${riskLevel} risk-badge-lg`}>
+            {RISK_ICONS[riskLevel]} {RISK_LABELS[riskLevel] || riskLevel}
+          </span>
         </header>
+
+        {medicamento?.especies_permitidas?.length > 0 && (
+          <BadgeList label="Especies permitidas" items={medicamento.especies_permitidas} className="badge badge-especie" />
+        )}
+        {medicamento?.especies_contraindicadas?.length > 0 && (
+          <BadgeList label="Especies contraindicadas" items={medicamento.especies_contraindicadas} className="badge badge-contraindicada" />
+        )}
 
         {riskLevel === 'critico' && (
           <div className="contraindication-warning">
@@ -349,35 +432,34 @@ export default function MedicamentoDetallePage() {
           </div>
         )}
 
-        {/* Resumen destacado de la dosis según la presentación activa */}
-        {(presentacionActiva.dosis_texto || presentacionActiva.dosis_recomendada || medicamento.dosis_recomendada) && (
+        {/* ── Dosis destacada (hero) ─────────────── */}
+        {textoDosis && (
           <section className="dosis-destacada">
             <div className="dosis-destacada-main">
               <span className="dosis-destacada-label">Dosis de referencia</span>
-              <strong className="dosis-destacada-valor">
-                {presentacionActiva.dosis_texto || presentacionActiva.dosis_recomendada || medicamento.dosis_recomendada}
-              </strong>
+              <strong className="dosis-destacada-valor">{textoDosis}</strong>
               {dosageRange && <span className="dosis-destacada-rango">{dosageRange}</span>}
             </div>
-            <CopiarDosis texto={`${medicamento.nombre}: ${presentacionActiva.dosis_texto || presentacionActiva.dosis_recomendada || medicamento.dosis_recomendada}${dosageRange ? ` (${dosageRange})` : ''}`} />
+            <CopiarDosis texto={`${medicamento.nombre}: ${textoDosis}${dosageRange ? ` (${dosageRange})` : ''}`} />
           </section>
         )}
 
-        {/* Selector de presentaciones */}
+        {/* ── Selector de presentaciones ─────────── */}
         {tienePresentaciones && (
-          <section className="detail-section selector-presentaciones">
-            <h2>Presentaciones disponibles</h2>
+          <section className="selector-presentaciones">
+            <h2 className="section-title">{ICONOS.presentaciones || '📦'} Presentaciones disponibles</h2>
             <div className="presentaciones-grid">
               {medicamento.presentaciones.map((pres, idx) => (
                 <button
                   key={idx}
+                  type="button"
                   className={`presentacion-card ${presentacionSeleccionada === pres ? 'active' : ''}`}
                   onClick={() => setPresentacionSeleccionada(pres)}
                 >
                   <div className="pres-etiqueta">{pres.etiqueta}</div>
                   <div className="pres-concentracion">{pres.concentracion}</div>
                   {pres.dosis_texto && <div className="pres-dosis">{pres.dosis_texto}</div>}
-                  {pres.dosis_min_mg_kg && pres.dosis_max_mg_kg && (
+                  {(pres.dosis_min_mg_kg || pres.dosis_min_mg_kg === 0) && (pres.dosis_max_mg_kg || pres.dosis_max_mg_kg === 0) && (
                     <div className="pres-rango">
                       {pres.dosis_min_mg_kg === pres.dosis_max_mg_kg
                         ? `${pres.dosis_min_mg_kg} mg/kg`
@@ -387,98 +469,96 @@ export default function MedicamentoDetallePage() {
                 </button>
               ))}
             </div>
-            <p className="pres-hint">Hacé clic en una presentación para actualizar dosis y cálculos.</p>
+            <p className="pres-hint">Hacé clic en una presentación para actualizar la dosis y la calculadora.</p>
           </section>
         )}
 
-        {/* Calculadora rápida: peso → mg (y mL si hay concentración) */}
-        <CalculadoraEmbebida medicamento={medicamento} presentacionActiva={presentacionActiva} />
+        {/* ── Calculadora rápida ─────────────────── */}
+        <Acordeon titulo="Calculadora rápida" icono={ICONOS.calculadora} defaultOpen>
+          <CalculadoraEmbebida medicamento={medicamento} presentacionActiva={presentacionActiva} />
+        </Acordeon>
 
-        {/* Interacciones críticas conocidas */}
+        {/* ── Posología ──────────────────────────── */}
+        <Acordeon titulo="Posología y uso" icono={ICONOS.posologia}>
+          <TextSection title="Indicaciones">{medicamento.indicaciones}</TextSection>
+          <div className="detail-grid">
+            <Field label="Vía de administración" value={medicamento.via_administracion} sinDato />
+            <Field label="Presentación" value={medicamento.presentacion} sinDato />
+            <Field label="Concentración" value={medicamento.concentracion} sinDato />
+            <Field label="Frecuencia" value={medicamento.frecuencia} sinDato />
+            <Field label="Duración" value={medicamento.duracion} sinDato />
+          </div>
+        </Acordeon>
+
+        {/* ── Farmacología ───────────────────────── */}
+        <Acordeon titulo="Farmacología" icono={ICONOS.farmacologia}>
+          <TextSection title="Mecanismo de acción">{medicamento.mecanismo_accion}</TextSection>
+          <TextSection title="Farmacocinética">{medicamento.farmacocinetica}</TextSection>
+          <TextSection title="Uso para estudio">{medicamento.uso_estudio}</TextSection>
+        </Acordeon>
+
+        {/* ── Seguridad ──────────────────────────── */}
+        <Acordeon titulo="Seguridad" icono={ICONOS.seguridad} badge={riskLevel === 'critico' || riskLevel === 'alto' ? riskLevel : undefined}>
+          <TextSection title="Contraindicaciones">{medicamento.contraindicaciones}</TextSection>
+          <TextSection title="Efectos secundarios">{medicamento.efectos_secundarios}</TextSection>
+          <TextSection title="Precauciones">{medicamento.precauciones}</TextSection>
+          <TextSection title="Embarazo y lactancia">{medicamento.embarazo_lactancia}</TextSection>
+          <TextSection title="Alertas clínicas">
+            {medicamento.alertas_clinicas && medicamento.alertas_clinicas.length > 0
+              ? medicamento.alertas_clinicas.join(' • ')
+              : ''}
+          </TextSection>
+          <TextSection title="Interacciones">{medicamento.interacciones}</TextSection>
+          <TextSection title="Notas educativas">{medicamento.notas}</TextSection>
+        </Acordeon>
+
+        {/* ── Interacciones críticas conocidas ───── */}
         {interacciones.length > 0 && (
-          <section className="detail-section interacciones-alertas">
-            <h2>Interacciones a tener en cuenta</h2>
-            {interacciones.map((inta, idx) => (
-              <div
-                key={idx}
-                className={`interaccion-alerta ${inta.nivel === 'critico' ? 'critica' : 'alta'}`}
-              >
-                <strong>
-                  {medicamento.nombre} + {inta.otros}:
-                </strong>{' '}
-                {inta.efecto}
-              </div>
-            ))}
-          </section>
+          <Acordeon titulo={`Interacciones conocidas (${interacciones.length})`} icono={ICONOS.interacciones} defaultOpen>
+            <div className="interacciones-alertas">
+              {interacciones.map((inta, idx) => (
+                <div key={idx} className="interaccion-alerta">
+                  <span className={`badge risk-${inta.nivel === 'critico' ? 'critico' : 'alto'}`}>
+                    {inta.nivel === 'critico' ? '🚫 Crítica' : '⚠️ Precaución'}
+                  </span>
+                  <p className="text-interaccion">
+                    <strong>con {inta.otros}:</strong> {inta.efecto}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Acordeon>
         )}
 
-        {/* Secciones colapsables: solo lo esencial queda visible arriba */}
-        <Acordeon titulo="Identificación">
+        {/* ── Referencias ────────────────────────── */}
+        <Acordeon titulo="Registros y fuente" icono={ICONOS.referencias}>
           <div className="detail-grid">
-            <Field label="Principio activo" value={medicamento.principio_activo || EMPTY_VALUE} />
-            <Field label="Composición" value={medicamento.composicion || EMPTY_VALUE} />
-            <Field label="Familia terapéutica" value={medicamento.familia_terapeutica || EMPTY_VALUE} />
-            <Field label="Presentación" value={presentacionActiva.presentacion || medicamento.presentacion || EMPTY_VALUE} />
-            <Field label="Concentración" value={presentacionActiva.concentracion || medicamento.concentracion || EMPTY_VALUE} />
-            <Field label="Concentración (mg/mL)" value={concMgMl ? `${concMgMl} mg/mL` : EMPTY_VALUE} />
-            <Field label="Laboratorio / marca de referencia" value={medicamento.laboratorio || EMPTY_VALUE} />
-            <Field label="Clasificación" value={medicamento.clasificacion || EMPTY_VALUE} />
+            <Field label="Registro SAG Chile" value={medicamento.registro_sag} sinDato />
+            <Field label="Registro SENASA Argentina" value={medicamento.registro_senasa} sinDato />
+            <Field label="Fuente de dosis" value={medicamento.fuente} sinDato />
           </div>
-        </Acordeon>
-
-        <Acordeon titulo="Dosis y uso clínico">
-          <div className="detail-grid">
-            <Field label="Dosis recomendada" value={presentacionActiva.dosis_texto || presentacionActiva.dosis_recomendada || medicamento.dosis_recomendada || EMPTY_VALUE} />
-            <Field label="Rango (mg/kg)" value={dosageRange || EMPTY_VALUE} />
-            <Field label="Frecuencia" value={medicamento.frecuencia || EMPTY_VALUE} />
-            <Field label="Vía de administración" value={medicamento.via_administracion || EMPTY_VALUE} />
-            <Field label="Conservación" value={medicamento.conservacion || EMPTY_VALUE} />
-          </div>
-          <div className="detail-badges-row">
-            <BadgeList label="Especies permitidas" items={medicamento.especies_permitidas} className="badge-especie" />
-            <BadgeList label="Epecies contraindicadas" items={medicamento.especies_contraindicadas} className="badge-contraindicada" />
-          </div>
-        </Acordeon>
-
-        <Acordeon titulo="Farmacología">
-          <TextSection title="Mecanismo de acción">
-            {medicamento.mecanismo_accion}
-          </TextSection>
-          <TextSection title="Uso para estudio">
-            {medicamento.uso_estudio}
-          </TextSection>
-        </Acordeon>
-
-        <Acordeon titulo="Seguridad" badge={riskLevel === 'critico' || riskLevel === 'alto' ? riskLevel : undefined}>
-          {medicamento.alertas_clinicas && medicamento.alertas_clinicas.length > 0 && (
-            <TextSection title="Alertas clínicas">
-              {medicamento.alertas_clinicas.join(' • ')}
-            </TextSection>
+          {medicamento.url_referencia && (
+            <p className="detail-text">
+              <a href={medicamento.url_referencia} target="_blank" rel="noreferrer noopener">
+                Ver referencia externa ↗
+              </a>
+            </p>
           )}
-          <TextSection title="Contraindicaciones">
-            {medicamento.contraindicaciones}
-          </TextSection>
-          <TextSection title="Efectos secundarios">
-            {medicamento.efectos_secundarios}
-          </TextSection>
-          <TextSection title="Interacciones">
-            {medicamento.interacciones}
-          </TextSection>
-          <TextSection title="Notas educativas">
-            {medicamento.notas}
-          </TextSection>
         </Acordeon>
 
-        <Acordeon titulo="Registros y fuente">
-          <div className="detail-grid">
-            <Field label="Registro SAG Chile" value={medicamento.registro_sag || 'Pendiente de verificación'} />
-            <Field label="Registro SENASA Argentina" value={medicamento.registro_senasa || 'Pendiente de verificación'} />
-            <Field label="Fuente de dosis" value={medicamento.fuente || EMPTY_VALUE} />
-          </div>
-        </Acordeon>
+        {/* ── Aviso de datos pendientes ──────────── */}
+        {pendientes.length > 0 && (
+          <aside className="pendientes-nota">
+            <span className="pendientes-icono" aria-hidden="true">📋</span>
+            <div>
+              <strong>Datos pendientes de completar:</strong> {pendientes.join(', ')}.
+              <p>Podés ayudar a la comunidad completando esta ficha desde el catálogo.</p>
+            </div>
+          </aside>
+        )}
 
         <div className="detail-actions">
-          <Link to={`/calculadora?medicamento=${medicamento.id}`} className="btn btn-primary">Calculadora completa</Link>
+          <Link to={`/calculadora?medicamento=${medicamento.id}`} className="btn btn-primary">🧮 Calculadora completa</Link>
           <Link to={backTo} className="btn btn-secondary">Ver catálogo</Link>
         </div>
       </article>

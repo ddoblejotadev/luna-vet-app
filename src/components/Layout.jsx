@@ -1,7 +1,16 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import KawaiiSticker from './KawaiiSticker'
 import './Layout.css'
+
+const NAV_ITEMS = [
+  { to: '/', label: 'Inicio', icon: '🏠', end: true },
+  { to: '/medicamentos', label: 'Medicamentos', icon: '💊' },
+  { to: '/calculadora', label: 'Calculadora', icon: '🧮' },
+  { to: '/historial', label: 'Historial', icon: '🕒' },
+  { to: '/estudio', label: 'Estudio', icon: '📚' },
+]
 
 export default function Layout({ children }) {
   const { user, signOut } = useAuth()
@@ -17,8 +26,11 @@ export default function Layout({ children }) {
       <header className="header">
         <nav className="navbar">
           <Link to="/" className="navbar-brand" onClick={closeMenu}>
-            <h1>🐾 LunaVet</h1>
-            <span className="subtitle">Calculadora Veterinaria Inteligente</span>
+            <KawaiiSticker size={42} alt="LunaVet, la gatita veterinaria" />
+            <span className="brand-text">
+              <h1>LunaVet</h1>
+              <span className="subtitle">Calculadora Veterinaria</span>
+            </span>
           </Link>
 
           <button
@@ -33,11 +45,18 @@ export default function Layout({ children }) {
 
           <div className={`navbar-collapse ${menuOpen ? 'is-open' : ''}`}>
             <ul className="nav-links">
-              <li><NavLink to="/" className={navLinkClass} onClick={closeMenu}>Inicio</NavLink></li>
-              <li><NavLink to="/calculadora" className={navLinkClass} onClick={closeMenu}>Calculadora</NavLink></li>
-              <li><NavLink to="/medicamentos" className={navLinkClass} onClick={closeMenu}>Medicamentos</NavLink></li>
-              <li><NavLink to="/historial" className={navLinkClass} onClick={closeMenu}>Historial</NavLink></li>
-              <li><NavLink to="/estudio" className={navLinkClass} onClick={closeMenu}>Estudio</NavLink></li>
+              {NAV_ITEMS.map((item) => (
+                <li key={item.to}>
+                  <NavLink
+                    to={item.to}
+                    end={item.end}
+                    className={navLinkClass}
+                    onClick={closeMenu}
+                  >
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
             </ul>
 
             <div className="navbar-auth">
@@ -66,8 +85,26 @@ export default function Layout({ children }) {
         {children}
       </main>
 
+      {/* Navegación inferior para móvil: acceso directo a las 5 secciones */}
+      <nav className="bottom-nav" aria-label="Navegación principal móvil">
+        {NAV_ITEMS.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.end}
+            className={({ isActive }) =>
+              isActive ? 'bottom-nav-item bottom-nav-item--active' : 'bottom-nav-item'
+            }
+          >
+            <span className="bottom-nav-icon" aria-hidden="true">{item.icon}</span>
+            <span className="bottom-nav-label">{item.label}</span>
+          </NavLink>
+        ))}
+      </nav>
+
       <footer className="footer">
-        <p>&copy; 2026 LunaVet - Calculadora Veterinaria. Todos los derechos reservados.</p>
+        <KawaiiSticker size={40} alt="" />
+        <p>&copy; 2026 LunaVet - Calculadora Veterinaria. Hecha con 💗 para clínicas.</p>
       </footer>
     </div>
   )
