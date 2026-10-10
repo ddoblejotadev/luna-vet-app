@@ -109,6 +109,7 @@ export default function CalculadoraPage() {
   const [dosisMinPorKg, setDosisMinPorKg] = useState('')
   const [dosisMaxPorKg, setDosisMaxPorKg] = useState('')
   const [frecuencia, setFrecuencia] = useState('12')
+  const [concentracionMgMl, setConcentracionMgMl] = useState('')
   const [metodo, setMetodo] = useState('peso')
   const [margen, setMargen] = useState('10')
   const [saving, setSaving] = useState(false)
@@ -212,7 +213,14 @@ export default function CalculadoraPage() {
       setMetodo('peso')
       setDosisMinPorKg('')
       setDosisMaxPorKg('')
+      setConcentracionMgMl('')
       return
+    }
+
+    if (medicamento.concentracion_mg_ml) {
+      setConcentracionMgMl(medicamento.concentracion_mg_ml.toString())
+    } else {
+      setConcentracionMgMl('')
     }
 
     const min = medicamento.dosis_minima_mg_kg
@@ -360,6 +368,7 @@ export default function CalculadoraPage() {
 
     try {
       const pesoNum = parseFloat(peso)
+      const concMgMl = concentracionMgMl !== '' ? parseFloat(concentracionMgMl) : null
 
       if (isNaN(pesoNum) || pesoNum <= 0) {
         alert('Ingresá un peso válido mayor a 0')
@@ -383,7 +392,7 @@ export default function CalculadoraPage() {
             return
           }
 
-          resultObj = calcularPorPeso(pesoNum, dosisNum, frecuenciaNum)
+          resultObj = calcularPorPeso(pesoNum, dosisNum, frecuenciaNum, concMgMl)
           break
         }
         case 'catalogo': {
@@ -395,7 +404,7 @@ export default function CalculadoraPage() {
             return
           }
 
-          resultObj = calcularRangoPorPeso(pesoNum, minNum, maxNum, frecuenciaNum)
+          resultObj = calcularRangoPorPeso(pesoNum, minNum, maxNum, frecuenciaNum, concMgMl)
           break
         }
         case 'bsa': {
@@ -406,7 +415,7 @@ export default function CalculadoraPage() {
             return
           }
 
-          resultObj = calcularPorBSA(pesoNum, dosisNum, frecuenciaNum)
+          resultObj = calcularPorBSA(pesoNum, dosisNum, concMgMl)
           break
         }
         case 'margen': {
@@ -417,7 +426,7 @@ export default function CalculadoraPage() {
             return
           }
 
-          resultObj = calcularConMargen(pesoNum, dosisNum, parseInt(margen))
+          resultObj = calcularConMargen(pesoNum, dosisNum, parseInt(margen), concMgMl)
           break
         }
         default:
@@ -902,6 +911,20 @@ export default function CalculadoraPage() {
                       <option value="12">Cada 12 horas (2 veces al día)</option>
                       <option value="24">Cada 24 horas (1 vez al día)</option>
                     </select>
+                  </div>
+                  
+                  <div className="form-group calc-concentracion-input">
+                    <label htmlFor="concentracion-input">Concentración (mg/mL) - opcional, para calcular mL</label>
+                    <input
+                      id="concentracion-input"
+                      className="form-control"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="Ej: 10"
+                      value={concentracionMgMl}
+                      onChange={(e) => setConcentracionMgMl(e.target.value)}
+                    />
                   </div>
 
                   <div className="form-actions">

@@ -4,7 +4,6 @@ import { useState, useCallback } from 'react'
  * Hook para calcular dosis de medicamentos
  * Soporta cálculos por peso, superficie corporal, y otros parámetros
  */
-
 export function useDosisCalculator() {
   const [resultado, setResultado] = useState(null)
   const [error, setError] = useState(null)
@@ -14,9 +13,10 @@ export function useDosisCalculator() {
    * @param {number} peso - Peso del animal en kg
    * @param {number} dosisPorKg - Dosis recomendada por kg
    * @param {number} frecuencia - Cada cuántas horas
+   * @param {number|null} concMgMl - Concentración (opcional) para calcular volumen
    * @returns {object} Resultado del cálculo
    */
-  const calcularPorPeso = useCallback((peso, dosisPorKg, frecuencia = 12) => {
+  const calcularPorPeso = useCallback((peso, dosisPorKg, frecuencia = 12, concMgMl = null) => {
     try {
       if (peso <= 0 || dosisPorKg <= 0) {
         throw new Error('El peso y la dosis deben ser positivos')
@@ -31,6 +31,10 @@ export function useDosisCalculator() {
         frecuencia,
         unidad: 'mg',
         notas: `Administrar ${dosisSingle.toFixed(2)}mg cada ${frecuencia} horas`,
+      }
+
+      if (concMgMl && concMgMl > 0) {
+        resultado.volumenMl = Number((dosisSingle / concMgMl).toFixed(2))
       }
 
       setResultado(resultado)
@@ -50,42 +54,42 @@ export function useDosisCalculator() {
    * @param {number} dosisMinPorKg - Dosis mínima recomendada por kg
    * @param {number} dosisMaxPorKg - Dosis máxima recomendada por kg
    * @param {number} frecuencia - Cada cuántas horas
+   * @param {number|null} concMgMl - Concentración (opcional) para calcular volumen
    * @returns {object} Resultado del cálculo
    */
-  const calcularRangoPorPeso = useCallback((peso, dosisMinPorKg, dosisMaxPorKg, frecuencia = 12) => {
+  const calcularRangoPorPeso = useCallback((peso, dosisMinPorKg, dosisMaxPorKg, frecuencia = 12, concMgMl = null) => {
     try {
       if (peso <= 0 || dosisMinPorKg <= 0 || dosisMaxPorKg <= 0) {
         throw new Error('El peso y las dosis deben ser positivos')
       }
 
-      if (dosisMinPorKg > dosisMaxPorKg) {
-        throw new Error('La dosis mínima no puede superar la dosis máxima')
-      }
+      const minUnica = peso * dosisMinPorKg
+      const maxUnica = peso * dosisMaxPorKg
 
-      const dosisMinSingle = peso * dosisMinPorKg
-      const dosisMaxSingle = peso * dosisMaxPorKg
-      const administracionesDiarias = 24 / frecuencia
-      const dosisMinDaily = dosisMinSingle * administracionesDiarias
-      const dosisMaxDaily = dosisMaxSingle * administracionesDiarias
+      const minDiaria = minUnica * (24 / frecuencia)
+      const maxDiaria = maxUnica * (24 / frecuencia)
 
       const resultado = {
-        tipo: 'rango',
-        dosisMinSingle: Number(dosisMinSingle.toFixed(2)),
-        dosisMaxSingle: Number(dosisMaxSingle.toFixed(2)),
-        dosisMinDaily: Number(dosisMinDaily.toFixed(2)),
-        dosisMaxDaily: Number(dosisMaxDaily.toFixed(2)),
-        dosisMinPorKg,
-        dosisMaxPorKg,
+        rangoUnico: `${minUnica.toFixed(2)} - ${maxUnica.toFixed(2)} mg`,
+        minUnica: Number(minUnica.toFixed(2)),
+        maxUnica: Number(maxUnica.toFixed(2)),
+        minDiaria: Number(minDiaria.toFixed(2)),
+        maxDiaria: Number(maxDiaria.toFixed(2)),
         frecuencia,
         unidad: 'mg',
-        notas: `Administrar ${dosisMinSingle.toFixed(2)}-${dosisMaxSingle.toFixed(2)}mg cada ${frecuencia} horas`,
+        notas: `Rango para administración cada ${frecuencia} horas`,
+      }
+
+      if (concMgMl && concMgMl > 0) {
+        resultado.volumenMinMl = Number((minUnica / concMgMl).toFixed(2))
+        resultado.volumenMaxMl = Number((maxUnica / concMgMl).toFixed(2))
       }
 
       setResultado(resultado)
       setError(null)
       return resultado
     } catch (err) {
-      const errorMsg = err.message || 'Error al calcular rango de dosis'
+      const errorMsg = err.message || 'Error al calcular rango'
       setError(errorMsg)
       setResultado(null)
       throw err
@@ -93,59 +97,74 @@ export function useDosisCalculator() {
   }, [])
 
   /**
-   * Calcular dosis por superficie corporal (BSA)
-   * Fórmula: BSA (m²) = (Peso en kg ^ 0.67) × 10.1 / 1000
+   * Calcular por Superficie Corporal (BSA) - Muy usado en oncología o perros minis
+   * Fórmula simplificada: BSA(m2) = (K * (Peso en kg ^ (2/3))) / 10000 
+   * Asumimos perro K=101 por defecto
+   * @param {number} peso - Peso del animal en kg
+   * @param {number} dosisPorM2 - Dosis por metro cuadrado
+   * @param {number|null} concMgMl - Concentración (opcional)
    */
-  const calcularPorBSA = useCallback((peso, dosisPerBSA) => {
+  const calcularPorBSA = useCallback((peso, dosisPorM2, concMgMl = null) => {
     try {
-      if (peso <= 0 || dosisPerBSA <= 0) {
-        throw new Error('El peso y la dosis deben ser positivos')
-      }
-
-      const bsa = (Math.pow(peso, 0.67) * 10.1) / 1000
-      const dosisSingle = bsa * dosisPerBSA
-
+      if (peso <= 0) throw new Error('Peso inválido')
+      
+      const bsa = (101 * Math.pow((peso * 1000), 2/3)) / 10000
+      const dosis = bsa * dosisPorM2
+      
       const resultado = {
-        bsa: Number(bsa.toFixed(4)),
-        dosisSingle: Number(dosisSingle.toFixed(2)),
+        bsa: Number(bsa.toFixed(3)),
+        dosisSingle: Number(dosis.toFixed(2)),
         unidad: 'mg',
-        notas: `BSA: ${bsa.toFixed(4)}m² - Dosis: ${dosisSingle.toFixed(2)}mg`,
+        notas: `BSA calculado: ${bsa.toFixed(3)} m2`,
+      }
+      
+      if (concMgMl && concMgMl > 0) {
+        resultado.volumenMl = Number((dosis / concMgMl).toFixed(2))
       }
 
       setResultado(resultado)
       setError(null)
       return resultado
     } catch (err) {
-      const errorMsg = err.message || 'Error al calcular dosis por BSA'
-      setError(errorMsg)
+      setError(err.message)
       setResultado(null)
       throw err
     }
   }, [])
 
   /**
-   * Calcular dosis con margen de seguridad
+   * Calculo con margen de seguridad (+/- 10%)
+   * @param {number} peso - Peso
+   * @param {number} dosisBase - Dosis recomendada
+   * @param {number} margen - Porcentaje de margen (ej: 10)
+   * @param {number|null} concMgMl - Concentración (opcional)
    */
-  const calcularConMargen = useCallback((peso, dosisPorKg, margenPorcentaje = 10) => {
+  const calcularConMargen = useCallback((peso, dosisBase, margen = 10, concMgMl = null) => {
     try {
-      const base = peso * dosisPorKg
-      const margen = base * (margenPorcentaje / 100)
-
+      if (peso <= 0) throw new Error('Peso inválido')
+      
+      const dosis = peso * dosisBase
+      const variacion = dosis * (margen / 100)
+      
       const resultado = {
-        dosisBase: Number(base.toFixed(2)),
-        margenAlt: Number((base - margen).toFixed(2)),
-        margenAlto: Number((base + margen).toFixed(2)),
-        margenPorcentaje,
+        dosisIdeal: Number(dosis.toFixed(2)),
+        minUnica: Number((dosis - variacion).toFixed(2)),
+        maxUnica: Number((dosis + variacion).toFixed(2)),
         unidad: 'mg',
-        notas: `Rango: ${(base - margen).toFixed(2)} - ${(base + margen).toFixed(2)}mg (±${margenPorcentaje}%)`,
+        notas: `Margen aplicado: ±${margen}%`,
       }
 
+      if (concMgMl && concMgMl > 0) {
+        resultado.volumenIdealMl = Number((dosis / concMgMl).toFixed(2))
+        resultado.volumenMinMl = Number(((dosis - variacion) / concMgMl).toFixed(2))
+        resultado.volumenMaxMl = Number(((dosis + variacion) / concMgMl).toFixed(2))
+      }
+      
       setResultado(resultado)
       setError(null)
       return resultado
     } catch (err) {
-      const errorMsg = err.message || 'Error al calcular dosis con margen'
-      setError(errorMsg)
+      setError(err.message)
       setResultado(null)
       throw err
     }
@@ -163,6 +182,6 @@ export function useDosisCalculator() {
     calcularRangoPorPeso,
     calcularPorBSA,
     calcularConMargen,
-    resetear,
+    resetear
   }
 }

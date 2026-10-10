@@ -6,7 +6,7 @@ import supabase from './supabase'
 
 class MedicamentosService {
   applyMedicamentosFilters(queryBuilder, filters = {}) {
-    const { familia, especie, search, nivelRiesgo } = filters
+    const { familia, especie, nivelRiesgo } = filters
 
     let builder = queryBuilder
 
@@ -22,20 +22,15 @@ class MedicamentosService {
       builder = builder.eq('nivel_riesgo', nivelRiesgo)
     }
 
-    if (search && search.trim().length > 0) {
-      // Evita romper la sintaxis de or() de Supabase con caracteres especiales.
-      const cleanSearch = search
-        .trim()
-        .replace(/[(),\\"%*]/g, '')
-
-      if (cleanSearch.length > 0) {
-        builder = builder.or(
-          `nombre.ilike.%${cleanSearch}%,principio_activo.ilike.%${cleanSearch}%,familia_terapeutica.ilike.%${cleanSearch}%,dosis_recomendada.ilike.%${cleanSearch}%,indicaciones.ilike.%${cleanSearch}%`
-        )
-      }
-    }
-
     return builder
+  }
+
+  // Normaliza cadena quitando acentos para la busqueda
+  _normalizar(texto) {
+    return (texto || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
   }
 
   /**
@@ -52,7 +47,32 @@ class MedicamentosService {
       const { data, error } = await this.applyMedicamentosFilters(query, filters)
 
       if (error) throw error
-      return data || []
+      
+      let finalData = data || []
+      
+      // Filtrado por search en memoria para ignorar acentos, manejar textos anidados y evitar errores de encoding
+      const search = filters.search
+      if (search && search.trim().length > 0) {
+        const term = this._normalizar(search.trim())
+        finalData = finalData.filter(med => {
+          const concentracionStr = med.concentracion_mg_ml ? med.concentracion_mg_ml.toString() : ''
+          const target = this._normalizar(
+            `${med.nombre} ${med.principio_activo} ${med.familia_terapeutica} ${med.dosis_recomendada} ${med.indicaciones} ${med.notas} ${med.presentacion} ${concentracionStr}`
+          )
+          
+          if (target.includes(term)) return true
+          
+          if (med.presentaciones && Array.isArray(med.presentaciones)) {
+             return med.presentaciones.some(p => {
+               const pTarget = this._normalizar(`${p.etiqueta} ${p.presentacion} ${p.concentracion} ${p.dosis_texto}`)
+               return pTarget.includes(term)
+             })
+          }
+          return false
+        })
+      }
+
+      return finalData
     } catch (error) {
       console.error('Error fetching medicamentos:', error)
       return []

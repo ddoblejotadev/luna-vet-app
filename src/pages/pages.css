@@ -1716,3 +1716,276 @@ legend {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
+
+/* ============================================================
+   SELECTOR DE PRESENTACIONES + CALCULADORA EMBEBIDA (FICHA)
+   ============================================================ */
+
+.selector-presentaciones .presentaciones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.presentacion-card {
+  background: var(--gray-50);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.presentacion-card:hover {
+  border-color: var(--primary);
+  background: #eff6ff;
+}
+
+.presentacion-card.active {
+  border-color: var(--primary);
+  background: #dbeafe;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.pres-etiqueta {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--gray-900);
+  margin-bottom: 0.25rem;
+}
+
+.pres-concentracion {
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  margin-bottom: 0.25rem;
+}
+
+.pres-dosis {
+  font-size: 0.8rem;
+  color: var(--primary);
+  margin-bottom: 0.25rem;
+}
+
+.pres-rango {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.pres-hint {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  margin-top: 0.5rem;
+}
+
+.calculadora-embebida {
+  background: linear-gradient(135deg, #f8fafc 0%, #f0f4f8 100%);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.calc-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.calc-input-group {
+  flex: 1;
+  min-width: 140px;
+}
+
+.calc-input-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 0.35rem;
+}
+
+.calc-input-group input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  min-height: 44px;
+}
+
+.calc-input-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.calc-error {
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.calc-result {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-200);
+}
+
+.calc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.calc-row:last-child {
+  margin-bottom: 0;
+}
+
+.calc-row span {
+  color: var(--gray-600);
+  font-size: 0.9rem;
+}
+
+.calc-row strong {
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+.calc-row small {
+  color: var(--gray-500);
+  font-size: 0.75rem;
+}
+
+.calc-note {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  margin-top: 0.5rem;
+}
+
+.contraindication-warning {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  color: #991b1b;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+  .selector-presentaciones .presentaciones-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .calc-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .calc-input-group {
+    min-width: 0;
+  }
+}
+
+/* ============================================================
+   CALCULADORA PAGE — input de concentración para mL
+   ============================================================ */
+
+.calc-concentracion-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.calc-concentracion-input label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.calc-concentracion-input input {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius);
+  font-size: 1rem;
+}
+
+.calc-concentracion-input input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.calc-resultado-mL {
+  background: #dbeafe;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.calc-resultado-mL h4 {
+  margin: 0 0 0.5rem;
+  color: var(--primary);
+  font-size: 0.95rem;
+}
+
+.calc-resultado-mL .mL-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+.calc-resultado-mL .mL-row:last-child {
+  margin-bottom: 0;
+}
+
+.calc-resultado-mL .mL-row span {
+  color: var(--gray-700);
+}
+
+.calc-resultado-mL .mL-row strong {
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+.calc-dosis-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.metodo-select {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.metodo-select label {
+  font-weight: 600;
+  color: var(--gray-700);
+  font-size: 0.9rem;
+}
+
+.metodo-select select {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  min-height: 44px;
+}
+
+.metodo-select select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}

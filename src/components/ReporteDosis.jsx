@@ -24,23 +24,31 @@ function ReporteRow({ label, children }) {
 function ResultadoReporte({ metodo, resultado, margen }) {
   if (!resultado) return null
 
-  if (metodo === 'catalogo' && resultado.dosisMinSingle !== undefined) {
+  if (metodo === 'catalogo' || (resultado.minUnica !== undefined && resultado.maxUnica !== undefined)) {
     return (
       <>
-        <ReporteRow label="Dosis mínima por toma">{resultado.dosisMinSingle} {resultado.unidad}</ReporteRow>
-        <ReporteRow label="Dosis máxima por toma">{resultado.dosisMaxSingle} {resultado.unidad}</ReporteRow>
-        <ReporteRow label="Dosis mínima diaria">{resultado.dosisMinDaily} {resultado.unidad}</ReporteRow>
-        <ReporteRow label="Dosis máxima diaria">{resultado.dosisMaxDaily} {resultado.unidad}</ReporteRow>
+        <ReporteRow label="Dosis mínima por toma">{resultado.minUnica ?? resultado.dosisMinSingle} {resultado.unidad}</ReporteRow>
+        <ReporteRow label="Dosis máxima por toma">{resultado.maxUnica ?? resultado.dosisMaxSingle} {resultado.unidad}</ReporteRow>
+        <ReporteRow label="Dosis mínima diaria">{resultado.minDiaria ?? resultado.dosisMinDaily} {resultado.unidad}</ReporteRow>
+        <ReporteRow label="Dosis máxima diaria">{resultado.maxDiaria ?? resultado.dosisMaxDaily} {resultado.unidad}</ReporteRow>
+        {resultado.volumenMinMl !== undefined && (
+          <ReporteRow label="Volumen min–max">
+            {resultado.volumenMinMl} – {resultado.volumenMaxMl} mL
+          </ReporteRow>
+        )}
       </>
     )
   }
 
-  if (metodo === 'margen' && resultado.dosisBase !== undefined) {
+  if (metodo === 'margen' && resultado.dosisIdeal !== undefined) {
     return (
       <>
-        <ReporteRow label="Dosis base">{resultado.dosisBase} {resultado.unidad}</ReporteRow>
-        <ReporteRow label={`Dosis mínima (-${resultado.margen ?? margen ?? 10}%)`}>{resultado.dosisMin} {resultado.unidad}</ReporteRow>
-        <ReporteRow label={`Dosis máxima (+${resultado.margen ?? margen ?? 10}%)`}>{resultado.dosisMax} {resultado.unidad}</ReporteRow>
+        <ReporteRow label="Dosis base">{resultado.dosisIdeal} {resultado.unidad}</ReporteRow>
+        <ReporteRow label={`Dosis mínima (-${resultado.margen ?? margen ?? 10}%)`}>{resultado.minUnica} {resultado.unidad}</ReporteRow>
+        <ReporteRow label={`Dosis máxima (+${resultado.margen ?? margen ?? 10}%)`}>{resultado.maxUnica} {resultado.unidad}</ReporteRow>
+        {resultado.volumenIdealMl !== undefined && (
+          <ReporteRow label="Volumen (base)">{resultado.volumenIdealMl} mL</ReporteRow>
+        )}
       </>
     )
   }
@@ -50,6 +58,9 @@ function ResultadoReporte({ metodo, resultado, margen }) {
       <ReporteRow label="Dosis por toma">{resultado.dosisSingle} {resultado.unidad}</ReporteRow>
       <ReporteRow label="Dosis diaria">{resultado.dosisDaily} {resultado.unidad}</ReporteRow>
       {resultado.bsa && <ReporteRow label="Superficie corporal (BSA)">{resultado.bsa} m²</ReporteRow>}
+      {resultado.volumenMl !== undefined && (
+        <ReporteRow label="Volumen a administrar">{resultado.volumenMl} mL</ReporteRow>
+      )}
     </>
   )
 }
