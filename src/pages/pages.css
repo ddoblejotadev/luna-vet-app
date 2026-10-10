@@ -322,27 +322,370 @@
 
 /* CALCULADORA PAGE */
 .calculadora-page h1 {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
-.calculadora-container {
+/* Tabs de la calculadora */
+.calc-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border, #e5e7eb);
+}
+
+.calc-tab {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text-muted, #6b7280);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+
+.calc-tab.active {
+  color: var(--primary, #2563eb);
+  border-bottom-color: var(--primary, #2563eb);
+}
+
+/* Pasos numerados */
+.calc-step {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px dashed var(--border, #e5e7eb);
+}
+
+.calc-step:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.calc-step-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.05rem;
+  margin: 0 0 1rem;
+  color: var(--text, #111827);
+}
+
+.calc-step-title span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--primary, #2563eb);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.calc-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted, #6b7280);
+  margin: 0 0 0.75rem;
+}
+
+.calc-section-title {
+  font-size: 1.25rem;
+  margin: 0 0 0.25rem;
+}
+
+/* Dos columnas debajo de protocolos */
+.calculadora-container-dos-columnas {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
+  margin-top: 2rem;
 }
 
-.calculadora-form {
-  background: white;
-  padding: 2rem;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+/* Tarjeta de medicamento */
+.med-card {
+  background: #f8fafc;
+  border: 1px solid var(--border, #e5e7eb);
+  border-left: 4px solid var(--primary, #2563eb);
+  border-radius: var(--radius, 8px);
+  padding: 1rem 1.25rem;
+  margin-top: 1rem;
 }
 
-.calculadora-resultado {
+.med-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.med-card-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.med-card p {
+  margin: 0.35rem 0;
+  font-size: 0.92rem;
+}
+
+.med-card-dosis {
+  color: var(--primary, #2563eb);
+}
+
+.med-card-especies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.med-card-indicaciones {
+  font-size: 0.88rem;
+  color: var(--text-muted, #4b5563);
+}
+
+/* Sugerencias (autosuggest) */
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  margin: 4px 0 0;
+  padding: 0.25rem 0;
+  list-style: none;
   background: white;
-  padding: 2rem;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.suggestion-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: 'nombre familia' 'sub familia';
+  gap: 0 0.5rem;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+}
+
+.suggestion-item:hover,
+.suggestion-item.selected {
+  background: #eff6ff;
+  border-left-color: var(--primary, #2563eb);
+}
+
+.suggestion-nombre {
+  grid-area: nombre;
+  font-weight: 600;
+  font-size: 0.93rem;
+}
+
+.suggestion-sub {
+  grid-area: sub;
+  font-size: 0.78rem;
+  color: var(--text-muted, #6b7280);
+}
+
+.suggestion-familia {
+  grid-area: familia;
+  align-self: center;
+  font-size: 0.72rem;
+  color: var(--primary, #2563eb);
+  background: #eff6ff;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.suggestion-empty {
+  padding: 0.75rem 0.9rem;
+  color: var(--text-muted, #6b7280);
+  font-size: 0.9rem;
+}
+
+/* Protocolos predefinidos */
+.calc-protocolos {
+  margin-bottom: 1rem;
+}
+
+.protocolos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.protocolo-card {
+  background: white;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: var(--radius, 8px);
+  box-shadow: var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.08));
+  padding: 1rem 1.25rem;
+}
+
+.protocolo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.protocolo-header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.protocolo-pasos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.protocolo-paso-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 6px;
+  background: #fafafa;
+  cursor: pointer;
+  font: inherit;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.protocolo-paso-btn:hover {
+  background: #eff6ff;
+  border-color: var(--primary, #2563eb);
+}
+
+.protocolo-paso-num {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--primary, #2563eb);
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.protocolo-paso-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.protocolo-paso-info strong {
+  font-size: 0.9rem;
+}
+
+.protocolo-paso-info span {
+  font-size: 0.8rem;
+  color: var(--text-muted, #6b7280);
+}
+
+/* Calculadora MAC */
+.mac-ajustes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mac-ajuste {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.mac-ajuste:hover {
+  background: #f8fafc;
+}
+
+.mac-ajuste em {
+  color: var(--primary, #2563eb);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.mac-resultado {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.mac-agente-nombre {
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  margin: 0 0 1.25rem;
+}
+
+.mac-valores {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.mac-valor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mac-valor-label {
+  font-size: 0.8rem;
+  color: var(--text-muted, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mac-valor-numero {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text, #111827);
+}
+
+.mac-valor.destacado .mac-valor-numero {
+  color: var(--primary, #2563eb);
+  font-size: 2.6rem;
+}
+
+@media (max-width: 900px) {
+  .calculadora-container,
+  .calculadora-container-dos-columnas {
+    grid-template-columns: 1fr;
+  }
+
+  .protocolos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mac-valores {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
 fieldset {
