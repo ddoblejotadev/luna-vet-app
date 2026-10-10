@@ -1,40 +1,62 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import './Layout.css'
 
 export default function Layout({ children }) {
   const { user, signOut } = useAuth()
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  const closeMenu = () => setMenuOpen(false)
+
+  const navLinkClass = ({ isActive }) =>
+    isActive ? 'nav-link nav-link--active' : 'nav-link'
+
   return (
     <div className="app">
       <header className="header">
         <nav className="navbar">
-          <div className="navbar-brand">
+          <Link to="/" className="navbar-brand" onClick={closeMenu}>
             <h1>🐾 LunaVet</h1>
             <span className="subtitle">Calculadora Veterinaria Inteligente</span>
-          </div>
-          <ul className="nav-links">
-            <li><Link to="/">Inicio</Link></li>
-            <li><Link to="/medicamentos">Medicamentos</Link></li>
-            <li><Link to="/estudio">Estudio</Link></li>
-            <li><Link to="/calculadora">Calculadora</Link></li>
-          </ul>
-          <div className="navbar-auth">
-            {user ? (
-              <div className="user-session">
-                <span className="navbar-user" title={user.email}>{user.email}</span>
-                <button 
-                  onClick={() => signOut()} 
-                  className="btn btn-secondary btn-signout"
-                  title="Cerrar sesión"
-                >
-                  Salir
-                </button>
-              </div>
-            ) : (
-              <Link to="/login" className="btn btn-primary btn-login-nav">
-                Iniciar sesión
-              </Link>
-            )}
+          </Link>
+
+          <button
+            type="button"
+            className="navbar-toggle"
+            aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span aria-hidden="true">{menuOpen ? '✕' : '☰'}</span>
+          </button>
+
+          <div className={`navbar-collapse ${menuOpen ? 'is-open' : ''}`}>
+            <ul className="nav-links">
+              <li><NavLink to="/" className={navLinkClass} onClick={closeMenu}>Inicio</NavLink></li>
+              <li><NavLink to="/medicamentos" className={navLinkClass} onClick={closeMenu}>Medicamentos</NavLink></li>
+              <li><NavLink to="/estudio" className={navLinkClass} onClick={closeMenu}>Estudio</NavLink></li>
+              <li><NavLink to="/calculadora" className={navLinkClass} onClick={closeMenu}>Calculadora</NavLink></li>
+            </ul>
+
+            <div className="navbar-auth">
+              {user ? (
+                <div className="user-session">
+                  <span className="navbar-user" title={user.email}>{user.email}</span>
+                  <button
+                    onClick={() => { closeMenu(); signOut() }}
+                    className="btn btn-secondary btn-signout"
+                    title="Cerrar sesión"
+                  >
+                    Salir
+                  </button>
+                </div>
+              ) : (
+                <Link to="/login" className="btn btn-primary btn-login-nav" onClick={closeMenu}>
+                  Iniciar sesión
+                </Link>
+              )}
+            </div>
           </div>
         </nav>
       </header>
