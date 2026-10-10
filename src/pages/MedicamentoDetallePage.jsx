@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useLocation } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 import medicamentosService from '../services/medicamentosService'
 import './pages.css'
@@ -140,8 +140,39 @@ function CalculadoraEmbebida({ medicamento, presentacionActiva }) {
   )
 }
 
+/**
+ * Botón para copiar la dosis al portapapeles
+ */
+function CopiarDosis({ texto }) {
+  const [copiado, setCopiado] = useState(false)
+
+  if (!texto) return null
+
+  const copiar = async () => {
+    try {
+      await navigator.clipboard.writeText(texto)
+      setCopiado(true)
+      setTimeout(() => setCopiado(false), 2000)
+    } catch {
+      setCopiado(false)
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      className="btn-copiar"
+      onClick={copiar}
+      title="Copiar dosis al portapapeles"
+    >
+      {copiado ? '✓ Copiado' : 'Copiar dosis'}
+    </button>
+  )
+}
+
 export default function MedicamentoDetallePage() {
   const { id } = useParams()
+  const location = useLocation()
   const [medicamento, setMedicamento] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -188,6 +219,9 @@ export default function MedicamentoDetallePage() {
   const riskLevel = medicamento?.nivel_riesgo || 'normal'
   const tienePresentaciones = medicamento?.presentaciones && medicamento.presentaciones.length > 0
 
+  // El enlace "volver" regresa al listado con los filtros que estaban activos
+  const backTo = location.state?.from || '/medicamentos'
+
   // Datos de la presentación activa (si hay selector) o del medicamento base
   const presentacionActiva = presentacionSeleccionada || medicamento
 
@@ -199,7 +233,7 @@ export default function MedicamentoDetallePage() {
     return min === max ? `${min} mg/kg` : `${min} - ${max} mg/kg`
   }, [presentacionActiva])
 
-  const concMgMl = presentacionActiva?.concentracion_mg_ml ?? presentacionActiva?.concentracion_mg_ml
+  const concMgMl = presentacionActiva?.concentracion_mg_ml ?? medicamento?.concentracion_mg_ml
 
   if (loading) {
     return (
@@ -212,7 +246,7 @@ export default function MedicamentoDetallePage() {
   if (error) {
     return (
       <div className="page">
-        <Link to="/medicamentos" className="back-link">← Volver al catálogo</Link>
+        <Link to={backTo} className="back-link">← Volver al catálogo</Link>
         <div className="auth-guidance-box">
           <p>{error}</p>
         </div>
@@ -222,7 +256,7 @@ export default function MedicamentoDetallePage() {
 
   return (
     <div className="page medicamento-detail-page">
-      <Link to="/medicamentos" className="back-link">← Volver al catálogo</Link>
+      <Link to={backTo} className="back-link">← Volver al catálogo</Link>
 
       <article className={`medicamento-detail-card risk-border-${riskLevel}`}>
         <header className="medicamento-detail-header">
@@ -238,6 +272,20 @@ export default function MedicamentoDetallePage() {
           <div className="contraindication-warning">
             <strong>Advertencia crítica:</strong> este medicamento requiere verificación veterinaria estricta antes de calcular o administrar dosis.
           </div>
+        )}
+
+        {/* Resumen destacado de la dosis segun la presentacion activa */}
+        {(presentacionActiva.dosis_texto || presentacionActiva.dosis_recomendada || medicamento.dosis_recomendada) && (
+          <section className="dosis-destacada">
+            <div className="dosis-destacada-main">
+              <span className="dosis-destacada-label">Dosis de referencia</span>
+              <strong className="dosis-destacada-valor">
+                {presentacionActiva.dosis_texto || presentacionActiva.dosis_recomendada || medicamento.dosis_recomendada}
+              </strong>
+              {dosageRange && <span className="dosis-destacada-rango">{dosageRange}</span>}
+            </div>
+            <CopiarDosis texto={`${medicamento.nombre}: ${presentacionActiva.dosis_texto || presentacionActiva.dosis_recomendada || medicamento.dosis_recomendada}${dosageRange ? ` (${dosageRange})` : ''}`} />
+          </section>
         )}
 
         {/* Selector de presentaciones */}
@@ -363,7 +411,7 @@ export default function MedicamentoDetallePage() {
 
         <div className="detail-actions">
           <Link to={`/calculadora?medicamento=${medicamento.id}`} className="btn btn-primary">Calculadora completa</Link>
-          <Link to="/medicamentos" className="btn btn-secondary">Ver catálogo</Link>
+          <Link to={backTo} className="btn btn-secondary">Ver catálogo</Link>
         </div>
       </article>
     </div>
