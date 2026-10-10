@@ -1,15 +1,23 @@
 -- Migración: Completar datos faltantes en medicamentos clave
 -- Objetivo: Poblar campos de mecanismo, farmacocinética, precauciones
--- que actualmente están vacíos (causa "Sin dato" en la ficha)
--- Fecha: 2026-10-11
+-- Fecha: 2026-10-10
+
+-- ============================================================
+-- Crear columnas faltantes (si no existen)
+-- ============================================================
+
+ALTER TABLE public.medicamentos
+ADD COLUMN IF NOT EXISTS farmacocinetica TEXT,
+ADD COLUMN IF NOT EXISTS precauciones TEXT,
+ADD COLUMN IF NOT EXISTS embarazo_lactancia TEXT;
 
 -- ============================================================
 -- Actualizar medicamentos comunes con datos completos
 -- ============================================================
 
 UPDATE public.medicamentos
-SET 
-  mecanismo_accion = COALESCE(mecanismo_accion, 
+SET
+  mecanismo_accion = COALESCE(mecanismo_accion,
     CASE nombre
       WHEN 'Amoxicilina' THEN 'Beta-lactámico: inhibición de síntesis de pared bacteriana'
       WHEN 'Metronidazol' THEN 'Nitroimidazol: daña ADN bacteriano anaeróbico'
@@ -29,65 +37,62 @@ SET
     END),
   farmacocinetica = COALESCE(farmacocinetica,
     CASE nombre
-      WHEN 'Amoxicilina' THEN 'Absorción: oral 60-90%. Metabolismo: hepático. Eliminación: renal (60%). T½: 1-1.5h'
-      WHEN 'Metronidazol' THEN 'Absorción: rápida (90%). Metabolismo: hepático. Eliminación: renal. T½: 8-12h'
-      WHEN 'Enrofloxacina' THEN 'Absorción: rápida oral. Metabolismo: desacetilación hepática. T½: 4-12h (especie dependiente)'
-      WHEN 'Cefalexina' THEN 'Absorción: oral 60%. Metabolismo: mínimo. Eliminación: renal. T½: 0.5-2h'
-      WHEN 'Dipirona' THEN 'Absorción: rápida. Metabolismo: extenso hepático. Eliminación: renal. T½: 2-3h'
-      WHEN 'Tramadol' THEN 'Absorción: oral 70%. Metabolismo: hepático (activo). Eliminación: renal. T½: 5-6h'
-      WHEN 'Meloxicam' THEN 'Absorción: rápida. Metabolismo: hepático. Eliminación: renal/biliar. T½: 15-20h'
-      WHEN 'Prednisolona' THEN 'Absorción: oral rápida. Metabolismo: hepático. Eliminación: renal. T½: 18-36h'
-      WHEN 'Omeprazol' THEN 'Absorción: 35-40% con alimentos. Metabolismo: hepático (CYP2C19). T½: 1h (efecto 24-72h)'
-      WHEN 'Ranitidina' THEN 'Absorción: oral 50%. Metabolismo: hepático. Eliminación: renal. T½: 2-3h'
-      WHEN 'Metoclopramida' THEN 'Absorción: rápida. Metabolismo: hepático. Eliminación: renal. T½: 4-6h'
-      WHEN 'Ondansetrón' THEN 'Absorción: oral 55-60%. Metabolismo: hepático. Eliminación: renal. T½: 3-5h'
-      WHEN 'Dexametasona' THEN 'Absorción: IM rápida, IV inmediata. Metabolismo: hepático. T½: 36-72h (acción prolongada)'
-      WHEN 'Vitamina B12 (Cianocobalamina)' THEN 'Absorción: compleja (factor intrínseco). Almacenamiento: hígado. T½: 9 días (depósitos hepáticos prolongados)'
+      WHEN 'Amoxicilina' THEN 'Absorción oral 60-90%. Metabolismo hepático. Eliminación renal 60%. Vida media 1-1.5h'
+      WHEN 'Metronidazol' THEN 'Absorción rápida 90%. Metabolismo hepático. Eliminación renal. Vida media 8-12h'
+      WHEN 'Enrofloxacina' THEN 'Absorción rápida oral. Metabolismo desacetilación hepática. Vida media 4-12h especie dependiente'
+      WHEN 'Cefalexina' THEN 'Absorción oral 60%. Metabolismo mínimo. Eliminación renal. Vida media 0.5-2h'
+      WHEN 'Dipirona' THEN 'Absorción rápida. Metabolismo extenso hepático. Eliminación renal. Vida media 2-3h'
+      WHEN 'Tramadol' THEN 'Absorción oral 70%. Metabolismo hepático activo. Eliminación renal. Vida media 5-6h'
+      WHEN 'Meloxicam' THEN 'Absorción rápida. Metabolismo hepático. Eliminación renal y biliar. Vida media 15-20h'
+      WHEN 'Prednisolona' THEN 'Absorción oral rápida. Metabolismo hepático. Eliminación renal. Vida media 18-36h'
+      WHEN 'Omeprazol' THEN 'Absorción 35-40% con alimentos. Metabolismo hepático CYP2C19. Vida media 1h con efecto 24-72h'
+      WHEN 'Ranitidina' THEN 'Absorción oral 50%. Metabolismo hepático. Eliminación renal. Vida media 2-3h'
+      WHEN 'Metoclopramida' THEN 'Absorción rápida. Metabolismo hepático. Eliminación renal. Vida media 4-6h'
+      WHEN 'Ondansetrón' THEN 'Absorción oral 55-60%. Metabolismo hepático. Eliminación renal. Vida media 3-5h'
+      WHEN 'Dexametasona' THEN 'Absorción IM rápida IV inmediata. Metabolismo hepático. Vida media 36-72h acción prolongada'
+      WHEN 'Vitamina B12 (Cianocobalamina)' THEN 'Absorción compleja por factor intrínseco. Almacenamiento hepático. Vida media 9 días depósitos prolongados'
       ELSE farmacocinetica
     END),
   precauciones = COALESCE(precauciones,
     CASE nombre
-      WHEN 'Amoxicilina' THEN 'Insuficiencia renal (ajustar dosis). Alergia a penicilinas. Diarrea asociada a C. difficile.'
-      WHEN 'Metronidazol' THEN 'Neuropatía periférica con uso crónico. Evitar en hepatopatía severa. Neurotoxicidad con altas dosis.'
-      WHEN 'Enrofloxacina' THEN 'Lesión cartílago (jóvenes). Evitar en gatos (toxicidad retiniana a altas dosis). Tendinitis posible.'
-      WHEN 'Cefalexina' THEN 'Insuficiencia renal. Alergia cruzada con penicilinas (1-5%). Monitorear signos GI.'
-      WHEN 'Dipirona' THEN 'Riesgo agranulocitosis (vigilancia). Evitar en deshidratación. No usar >7 días sin supervisión.'
-      WHEN 'Tramadol' THEN 'Riesgo de síndrome serotoninérgico con IMAO. Puede deprimir SNC. Seizures en dosis altas.'
-      WHEN 'Meloxicam' THEN 'Monitorear función renal. Evitar con otros AINE. Ulceración GI posible. Dosis ajustada en gatos.'
-      WHEN 'Prednisolona' THEN 'Inmunosupresión. Hiperglucemia. Úlcera GI. Uso prolongado: insuficiencia adrenal. Monitoreo veterinario.'
-      WHEN 'Omeprazol' THEN 'Uso prolongado: malabsorción B12. Hipomagnesemia. Interacciones múltiples. Ajustar otras drogas.'
-      WHEN 'Ranitidina' THEN 'Insuficiencia renal (ajustar). Posible inhibición de absorción de otras drogas. Menos potente que IBP.'
-      WHEN 'Metoclopramida' THEN 'Efectos extrapiramidales con uso prolongado. Contraindicada en obstrucción mecánica. Sedación posible.'
-      WHEN 'Ondansetrón' THEN 'Constipación posible. Bien tolerado. Costo elevado. Usar dosis mínima efectiva.'
-      WHEN 'Dexametasona' THEN 'Potente: inmunosupresión, hiperglucemia, úlcera GI. Nunca suspender bruscamente. Hospitalización recomendada.'
-      WHEN 'Vitamina B12 (Cianocobalamina)' THEN 'Segura en dosis recomendadas. Bien tolerada. IM preferida para absorción. Equilibrio con ácido fólico.'
+      WHEN 'Amoxicilina' THEN 'Insuficiencia renal ajustar dosis. Alergia a penicilinas. Diarrea asociada a C. difficile'
+      WHEN 'Metronidazol' THEN 'Neuropatía periférica con uso crónico. Evitar en hepatopatía severa. Neurotoxicidad con altas dosis'
+      WHEN 'Enrofloxacina' THEN 'Lesión cartílago en jóvenes. Evitar en gatos toxicidad retiniana a altas dosis. Tendinitis posible'
+      WHEN 'Cefalexina' THEN 'Insuficiencia renal. Alergia cruzada con penicilinas 1-5%. Monitorear signos GI'
+      WHEN 'Dipirona' THEN 'Riesgo agranulocitosis vigilancia. Evitar en deshidratación. No usar más de 7 días sin supervisión'
+      WHEN 'Tramadol' THEN 'Riesgo de síndrome serotoninérgico con IMAO. Puede deprimir SNC. Convulsiones en dosis altas'
+      WHEN 'Meloxicam' THEN 'Monitorear función renal. Evitar con otros AINE. Ulceración GI posible. Dosis ajustada en gatos'
+      WHEN 'Prednisolona' THEN 'Inmunosupresión. Hiperglucemia. Úlcera GI. Uso prolongado insuficiencia adrenal. Monitoreo veterinario'
+      WHEN 'Omeprazol' THEN 'Uso prolongado malabsorción B12. Hipomagnesemia. Interacciones múltiples. Ajustar otras drogas'
+      WHEN 'Ranitidina' THEN 'Insuficiencia renal ajustar. Posible inhibición de absorción de otras drogas. Menos potente que IBP'
+      WHEN 'Metoclopramida' THEN 'Efectos extrapiramidales con uso prolongado. Contraindicada en obstrucción mecánica. Sedación posible'
+      WHEN 'Ondansetrón' THEN 'Constipación posible. Bien tolerado. Costo elevado. Usar dosis mínima efectiva'
+      WHEN 'Dexametasona' THEN 'Potente inmunosupresión hiperglucemia úlcera GI. Nunca suspender bruscamente. Hospitalización recomendada'
+      WHEN 'Vitamina B12 (Cianocobalamina)' THEN 'Segura en dosis recomendadas. Bien tolerada. IM preferida para absorción. Equilibrio con ácido fólico'
       ELSE precauciones
     END)
 WHERE activo = true AND (
-  mecanismo_accion IS NULL 
-  OR farmacocinetica IS NULL 
+  mecanismo_accion IS NULL
+  OR farmacocinetica IS NULL
   OR precauciones IS NULL
 );
 
 -- ============================================================
--- Crear tabla dosis_por_especie (si no existe)
--- para permitir dosis específicas por especie en cada presentación
+-- Crear columna dosis_por_especie
 -- ============================================================
 
 ALTER TABLE public.medicamentos
 ADD COLUMN IF NOT EXISTS dosis_por_especie JSONB DEFAULT '{}'::jsonb;
 
--- Comentario de columna
-COMMENT ON COLUMN public.medicamentos.dosis_por_especie IS 
+COMMENT ON COLUMN public.medicamentos.dosis_por_especie IS
   'JSON con dosis específicas por especie. Ej: {"Perro": {"min": 10, "max": 15}, "Gato": {"min": 5, "max": 10}}';
 
 -- ============================================================
 -- Semilla de dosis por especie para medicamentos clave
--- (Perro vs Gato principalmente)
 -- ============================================================
 
 UPDATE public.medicamentos
-SET dosis_por_especie = COALESCE(dosis_por_especie, '{}'::jsonb) || 
+SET dosis_por_especie = COALESCE(dosis_por_especie, '{}'::jsonb) ||
   CASE nombre
     WHEN 'Amoxicilina' THEN '{"Perro": {"min": 10, "max": 15}, "Gato": {"min": 10, "max": 15}}'::jsonb
     WHEN 'Enrofloxacina' THEN '{"Perro": {"min": 5, "max": 10}, "Gato": {"min": 5, "max": 8}}'::jsonb

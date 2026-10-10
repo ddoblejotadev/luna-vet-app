@@ -494,7 +494,6 @@ export default function MedicamentoDetallePage() {
         <Acordeon titulo="Farmacología" icono={ICONOS.farmacologia}>
           <TextSection title="Mecanismo de acción">{medicamento.mecanismo_accion}</TextSection>
           <TextSection title="Farmacocinética">{medicamento.farmacocinetica}</TextSection>
-          <TextSection title="Uso para estudio">{medicamento.uso_estudio}</TextSection>
         </Acordeon>
 
         {/* ── Seguridad ──────────────────────────── */}
