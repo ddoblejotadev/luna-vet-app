@@ -16,55 +16,6 @@ const normalizar = (texto) =>
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
 
-// ---------- Protocolos predefinidos de anestesia ----------
-
-const PROTOCOLOS = [
-  {
-    nombre: 'Sedación ligera — Perro',
-    especie: 'Perro',
-    pasos: [
-      { medicamento: 'Acepromazina', dosis: '0.03', unidad: 'mg/kg', via: 'IM' },
-      { medicamento: 'Butorfanol (analgesia)', dosis: '0.2', unidad: 'mg/kg', via: 'IM' },
-    ],
-  },
-  {
-    nombre: 'Sedación moderada — Perro',
-    especie: 'Perro',
-    pasos: [
-      { medicamento: 'Dexmedetomidina', dosis: '0.005', unidad: 'mg/kg', via: 'IM' },
-      { medicamento: 'Metadona (analgesia)', dosis: '0.2', unidad: 'mg/kg', via: 'IM' },
-    ],
-  },
-  {
-    nombre: 'Anestesia general — Perro',
-    especie: 'Perro',
-    pasos: [
-      { medicamento: 'Dexmedetomidina', dosis: '0.005', unidad: 'mg/kg', via: 'IM' },
-      { medicamento: 'Metadona (analgesia)', dosis: '0.2', unidad: 'mg/kg', via: 'IM' },
-      { medicamento: 'Propofol', dosis: '4', unidad: 'mg/kg', via: 'IV hasta efecto' },
-      { medicamento: 'Isoflurano', dosis: '1.5–2.5', unidad: '% mantenimiento', via: 'Inhalatorio' },
-    ],
-  },
-  {
-    nombre: 'Anestesia general — Gato',
-    especie: 'Gato',
-    pasos: [
-      { medicamento: 'Medetomidina', dosis: '0.004', unidad: 'mg/kg', via: 'IM' },
-      { medicamento: 'Metadona (analgesia)', dosis: '0.2', unidad: 'mg/kg', via: 'IM' },
-      { medicamento: 'Alfaxalona (IV)', dosis: '3', unidad: 'mg/kg', via: 'IV hasta efecto' },
-      { medicamento: 'Sevoflurano', dosis: '2.5–3.5', unidad: '% mantenimiento', via: 'Inhalatorio' },
-    ],
-  },
-  {
-    nombre: 'Sedación campo — Equino',
-    especie: 'Equino',
-    pasos: [
-      { medicamento: 'Xilacina', dosis: '1', unidad: 'mg/kg', via: 'IV' },
-      { medicamento: 'Butorfanol (analgesia)', dosis: '0.02', unidad: 'mg/kg', via: 'IV' },
-    ],
-  },
-]
-
 // ---------- Datos MAC para inhalatorios (Lumb & Jones / Plumb's) ----------
 
 const MAC_BASE = {
@@ -476,19 +427,6 @@ export default function CalculadoraPage() {
     }
   }
 
-  // Carga un paso de protocolo en la calculadora
-  const handleUsarPasoProtocolo = (paso) => {
-    const med = medicamentos.find(
-      (m) => normalizar(m.nombre) === normalizar(paso.medicamento)
-    )
-    if (med) {
-      setMedicamentoId(med.id)
-      setMedicamentoSearch(med.nombre)
-      handleMedicamentoSelect(med)
-    }
-    setPestana('calculadora')
-  }
-
   // ---------- Cálculo MAC ----------
 
   const macResultado = useMemo(() => {
@@ -645,45 +583,6 @@ export default function CalculadoraPage() {
         </div>
       ) : (
         <div className="calculadora-container">
-          {/* Protocolos predefinidos */}
-          <section className="calc-protocolos">
-            <h2 className="calc-section-title">Protocolos predefinidos</h2>
-            <p className="calc-hint">
-              Pautas de referencia por especie. Tocá un paso para cargarlo en la calculadora y
-              ajustar al peso del paciente.
-            </p>
-            <div className="protocolos-grid">
-              {PROTOCOLOS.map((protocolo) => (
-                <article key={protocolo.nombre} className="protocolo-card">
-                  <header className="protocolo-header">
-                    <h3>{protocolo.nombre}</h3>
-                    <span className="badge badge-especie">{protocolo.especie}</span>
-                  </header>
-                  <ol className="protocolo-pasos">
-                    {protocolo.pasos.map((paso, idx) => (
-                      <li key={idx} className="protocolo-paso">
-                        <button
-                          type="button"
-                          className="protocolo-paso-btn"
-                          onClick={() => handleUsarPasoProtocolo(paso)}
-                          title="Cargar en la calculadora"
-                        >
-                          <span className="protocolo-paso-num">{idx + 1}</span>
-                          <span className="protocolo-paso-info">
-                            <strong>{paso.medicamento}</strong>
-                            <span>
-                              {paso.dosis} {paso.unidad} · {paso.via}
-                            </span>
-                          </span>
-                        </button>
-                      </li>
-                    ))}
-                  </ol>
-                </article>
-              ))}
-            </div>
-          </section>
-
           <div className="calculadora-container-dos-columnas">
             <div className="calculadora-form">
               <form onSubmit={handleCalcular}>

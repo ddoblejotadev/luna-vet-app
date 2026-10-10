@@ -18,9 +18,9 @@
   --gray-100: #FBF3F8;
   --gray-200: #F5E8F0;
   --gray-300: #E8D5E3;
-  --gray-400: #B89BB4;
-  --gray-500: #8A6F85;
-  --gray-600: #6B5567;
+  --gray-400: #8A6A86;
+  --gray-500: #6E556A;
+  --gray-600: #56424E;
   --gray-700: #4E3D4B;
   --gray-800: #382C35;
   --gray-900: #2A2129;
@@ -29,7 +29,7 @@
   --cream: #FFF7FB;
   --card: #FFFFFF;
   --ink: #43304F;
-  --ink-soft: #7A6480;
+  --ink-soft: #5C4558;
 
   /* Variables legacy de pages.css/Layout.css (alias) */
   --bg-card: var(--card);
