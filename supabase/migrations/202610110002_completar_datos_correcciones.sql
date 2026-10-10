@@ -4,6 +4,8 @@
 -- Cefalexina y Ranitidina no existen en el catálogo: sin cambios.
 -- Idempotente: COALESCE protege datos ya existentes.
 
+BEGIN;
+
 UPDATE public.medicamentos
 SET
   mecanismo_accion = COALESCE(mecanismo_accion,
@@ -23,3 +25,5 @@ SET
   farmacocinetica = COALESCE(farmacocinetica,
     'Absorción dependiente de factor intrínseco gástrico. Se almacena en hígado')
 WHERE activo AND nombre ILIKE 'vitamina b12%';
+
+COMMIT;
