@@ -2270,3 +2270,40 @@ legend {
     padding: 0.5rem 0.75rem;
   }
 }
+
+/* ==========================================================================
+   ACORDEÓN FICHA MEDICAMENTO
+   ========================================================================== */
+
+.acordeon {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  overflow: hidden;
+  transition: all var(--transition-fast);
+}
+.acordeon-header {
+  width: 100%; text-align: left; background: none; border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; font-family: var(--font-heading); font-weight: 600; font-size: 1.1rem;
+  color: var(--text-primary);
+}
+.acordeon-header:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }
+.acordeon-header:hover { background-color: var(--bg-main); }
+.acordeon-titulo { display: flex; align-items: center; gap: var(--spacing-sm); }
+.acordeon-flecha { font-size: 1.2rem; color: var(--text-tertiary); transition: transform var(--transition-fast); }
+.acordeon.abierto .acordeon-flecha { color: var(--text-primary); }
+.acordeon-body {
+  padding: var(--spacing-md) var(--spacing-lg); border-top: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+}
+.detail-subsection { margin-bottom: var(--spacing-lg); }
+.detail-subsection:last-child { margin-bottom: 0; }
+.detail-subsection h3 { font-size: 1rem; color: var(--text-secondary); margin-bottom: var(--spacing-xs); text-transform: uppercase; letter-spacing: 0.5px; }
+.detail-badges h3 { font-size: 1rem; color: var(--text-secondary); margin-bottom: var(--spacing-xs); text-transform: uppercase; letter-spacing: 0.5px; }
+.interacciones-alertas { margin-bottom: var(--spacing-lg); }
+.interacciones-alertas .badge { display: inline-block; margin-bottom: var(--spacing-xs); }
+.text-interaccion { display: block; color: var(--text-secondary); margin-bottom: var(--spacing-sm); font-size: 0.95rem; }
+.text-interaccion strong { color: var(--text-primary); }

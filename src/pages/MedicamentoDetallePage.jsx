@@ -1,6 +1,7 @@
 import { Link, useParams, useLocation } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 import medicamentosService from '../services/medicamentosService'
+import { interaccionesPara } from '../data/interacciones'
 import './pages.css'
 
 const RISK_LABELS = {
@@ -11,6 +12,8 @@ const RISK_LABELS = {
 }
 
 const EMPTY_VALUE = 'No informado'
+
+const ESPECIES = ['Perro', 'Gato', 'Equino', 'Bovino', 'Ovino', 'Porcino', 'Aves']
 
 function Field({ label, value }) {
   if (value === null || value === undefined || value === '') return null
@@ -27,14 +30,14 @@ function BadgeList({ label, items, className = 'badge' }) {
   if (!items || items.length === 0) return null
 
   return (
-    <section className="detail-section">
-      <h2>{label}</h2>
+    <div className="detail-badges">
+      <h3>{label}</h3>
       <div className="badge-list">
         {items.map((item) => (
           <span key={item} className={className}>{item}</span>
         ))}
       </div>
-    </section>
+    </div>
   )
 }
 
@@ -42,100 +45,34 @@ function TextSection({ title, children }) {
   if (!children) return null
 
   return (
-    <section className="detail-section">
-      <h2>{title}</h2>
+    <div className="detail-subsection">
+      <h3>{title}</h3>
       <p className="detail-text">{children}</p>
-    </section>
+    </div>
   )
 }
 
 /**
- * Calculadora embebida en la ficha
- * Usa la presentación seleccionada para calcular mg y mL a partir del peso
+ * Sección colapsable: solo el título es visible hasta que se abre.
  */
-function CalculadoraEmbebida({ medicamento, presentacionActiva }) {
-  const [peso, setPeso] = useState('')
-  const [resultado, setResultado] = useState(null)
-
-  const dosisMin = presentacionActiva?.dosis_min_mg_kg ?? medicamento?.dosis_minima_mg_kg
-  const dosisMax = presentacionActiva?.dosis_max_mg_kg ?? medicamento?.dosis_maxima_mg_kg
-  const concMgMl = presentacionActiva?.concentracion_mg_ml ?? medicamento?.concentracion_mg_ml
-
-  const tieneRango = dosisMin !== null && dosisMin !== undefined && dosisMax !== null && dosisMax !== undefined
-  const tieneConc = concMgMl !== null && concMgMl !== undefined && concMgMl > 0
-
-  const calcular = () => {
-    const p = Number(peso)
-    if (!p || p <= 0) {
-      setResultado({ error: 'Ingresá un peso válido en kg' })
-      return
-    }
-    if (!tieneRango) {
-      setResultado({ error: 'Este medicamento/presentación no tiene rango numérico configurado' })
-      return
-    }
-    const minMg = p * dosisMin
-    const maxMg = p * dosisMax
-    let minMl = null, maxMl = null
-    if (tieneConc) {
-      minMl = minMg / concMgMl
-      maxMl = maxMg / concMgMl
-    }
-    setResultado({
-      peso: p,
-      minMg: Number(minMg.toFixed(2)),
-      maxMg: Number(maxMg.toFixed(2)),
-      minMl: minMl ? Number(minMl.toFixed(2)) : null,
-      maxMl: maxMl ? Number(maxMl.toFixed(2)) : null,
-      concMgMl,
-      tieneConc
-    })
-  }
+function Acordeon({ titulo, children, defaultOpen = false, badge }) {
+  const [abierto, setAbierto] = useState(defaultOpen)
 
   return (
-    <section className="detail-section calculadora-embebida">
-      <h2>Calculadora rápida</h2>
-      <div className="calc-inline">
-        <div className="calc-input-group">
-          <label htmlFor="peso-calc">Peso del paciente (kg)</label>
-          <input
-            id="peso-calc"
-            type="number"
-            step="0.1"
-            min="0.1"
-            placeholder="Ej: 15"
-            value={peso}
-            onChange={(e) => setPeso(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && calcular()}
-          />
-        </div>
-        <button className="btn btn-primary" onClick={calcular} style={{marginTop: '0.5rem', alignSelf: 'flex-end'}}>
-          Calcular
-        </button>
-      </div>
-
-      {resultado && resultado.error && (
-        <p className="calc-error">{resultado.error}</p>
-      )}
-
-      {resultado && !resultado.error && (
-        <div className="calc-result">
-          <div className="calc-row">
-            <span>Dosis total</span>
-            <strong>{resultado.minMg.toFixed(2)} – {resultado.maxMg.toFixed(2)} mg</strong>
-          </div>
-          {resultado.tieneConc && (
-            <div className="calc-row">
-              <span>Volumen a administrar</span>
-              <strong>{resultado.minMl.toFixed(2)} – {resultado.maxMl.toFixed(2)} mL</strong>
-              <small>(conc. {resultado.concMgMl} mg/mL)</small>
-            </div>
-          )}
-          {!resultado.tieneConc && (
-            <p className="calc-note">Configurá la concentración (mg/mL) en la presentación para ver el volumen en mL.</p>
-          )}
-        </div>
-      )}
+    <section className={`acordeon ${abierto ? 'abierto' : ''}`}>
+      <button
+        type="button"
+        className="acordeon-header"
+        onClick={() => setAbierto(!abierto)}
+        aria-expanded={abierto}
+      >
+        <span className="acordeon-titulo">
+          {titulo}
+          {badge && <span className={`badge risk-${badge}`}>{RISK_LABELS[badge]}</span>}
+        </span>
+        <span className="acordeon-flecha" aria-hidden="true">{abierto ? '▾' : '▸'}</span>
+      </button>
+      {abierto && <div className="acordeon-body">{children}</div>}
     </section>
   )
 }
@@ -170,6 +107,147 @@ function CopiarDosis({ texto }) {
   )
 }
 
+/**
+ * Calculadora embebida en la ficha
+ * Usa la presentación seleccionada (y la especie, si hay datos) para
+ * calcular mg y mL a partir del peso
+ */
+function CalculadoraEmbebida({ medicamento, presentacionActiva }) {
+  const [peso, setPeso] = useState('')
+  const [especie, setEspecie] = useState('')
+  const [resultado, setResultado] = useState(null)
+
+  const dosisPorEspecie = presentacionActiva?.dosis_por_especie?.[especie]
+    ?? medicamento?.dosis_por_especie?.[especie]
+  const dosisMin = dosisPorEspecie?.min
+    ?? presentacionActiva?.dosis_min_mg_kg
+    ?? medicamento?.dosis_minima_mg_kg
+  const dosisMax = dosisPorEspecie?.max
+    ?? presentacionActiva?.dosis_max_mg_kg
+    ?? medicamento?.dosis_maxima_mg_kg
+  const concMgMl = presentacionActiva?.concentracion_mg_ml ?? medicamento?.concentracion_mg_ml
+
+  const tieneRango = dosisMin !== null && dosisMin !== undefined && dosisMax !== null && dosisMax !== undefined
+  const tieneConc = concMgMl !== null && concMgMl !== undefined && concMgMl > 0
+  const usaDosisEspecie = Boolean(dosisPorEspecie)
+
+  const calcular = () => {
+    const p = Number(peso)
+    if (!p || p <= 0) {
+      setResultado({ error: 'Ingresá un peso válido en kg' })
+      return
+    }
+    if (!tieneRango) {
+      setResultado({ error: 'Este medicamento/presentación no tiene rango numérico configurado' })
+      return
+    }
+    const minMg = p * dosisMin
+    const maxMg = p * dosisMax
+    let minMl = null, maxMl = null
+    if (tieneConc) {
+      minMl = minMg / concMgMl
+      maxMl = maxMg / concMgMl
+    }
+    setResultado({
+      peso: p,
+      especie,
+      usaDosisEspecie,
+      minMg: Number(minMg.toFixed(2)),
+      maxMg: Number(maxMg.toFixed(2)),
+      minMl: minMl ? Number(minMl.toFixed(2)) : null,
+      maxMl: maxMl ? Number(maxMl.toFixed(2)) : null,
+      concMgMl,
+      tieneConc
+    })
+  }
+
+  return (
+    <section className="detail-section calculadora-embebida">
+      <h2>Calculadora rápida</h2>
+      <div className="calc-inline">
+        <div className="calc-input-group">
+          <label htmlFor="peso-calc">Peso del paciente (kg)</label>
+          <input
+            id="peso-calc"
+            type="number"
+            step="0.1"
+            min="0.1"
+            placeholder="Ej: 15"
+            value={peso}
+            onChange={(e) => setPeso(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && calcular()}
+          />
+        </div>
+        <div className="calc-input-group">
+          <label htmlFor="especie-calc">Especie (ajusta la dosis si hay dato)</label>
+          <select
+            id="especie-calc"
+            value={especie}
+            onChange={(e) => setEspecie(e.target.value)}
+          >
+            <option value="">Sin especie (rango general)</option>
+            {ESPECIES.map((esp) => (
+              <option key={esp} value={esp}>{esp}</option>
+            ))}
+          </select>
+        </div>
+        <button className="btn btn-primary" onClick={calcular}>Calcular</button>
+      </div>
+
+      {resultado && !resultado.error && (
+        <div className="calc-result">
+          <div className="calc-row">
+            <span>Peso:</span>
+            <strong>{resultado.peso} kg{resultado.especie ? ` · ${resultado.especie}` : ''}</strong>
+          </div>
+          <div className="calc-row">
+            <span>Dosis total:</span>
+            <strong>{resultado.minMg} – {resultado.maxMg} mg</strong>
+          </div>
+          {resultado.tieneConc && (
+            <div className="calc-row calc-resultado-mL">
+              <span>Volumen:</span>
+              <strong>{resultado.minMl} – {resultado.maxMl} mL</strong>
+              <span className="calc-note">({concMgMl} mg/mL)</span>
+            </div>
+          )}
+          <p className="calc-note">
+            {resultado.usaDosisEspecie
+              ? `Rango específico para ${resultado.especie}.`
+              : 'Rango general: verificá la dosis según la especie antes de administrar.'}
+          </p>
+        </div>
+      )}
+
+      {resultado && resultado.error && (
+        <div className="calc-error">{resultado.error}</div>
+      )}
+    </section>
+  )
+}
+
+/**
+ * Guarda la ficha vista en "Vistos recientemente" (localStorage)
+ */
+function registrarVista(med) {
+  try {
+    const key = 'lunavet:vistos'
+    const raw = localStorage.getItem(key)
+    const vistos = raw ? JSON.parse(raw) : []
+    const filtrados = vistos.filter((v) => v.id !== med.id)
+    filtrados.unshift({
+      id: med.id,
+      nombre: med.nombre,
+      principio_activo: med.principio_activo,
+      nivel_riesgo: med.nivel_riesgo,
+      ts: Date.now(),
+    })
+    localStorage.setItem(key, JSON.stringify(filtrados.slice(0, 6)))
+  } catch {
+    // localStorage no disponible: sin historial, sin error
+  }
+}
+
 export default function MedicamentoDetallePage() {
   const { id } = useParams()
   const location = useLocation()
@@ -181,21 +259,12 @@ export default function MedicamentoDetallePage() {
   useEffect(() => {
     let isMounted = true
 
-    async function loadMedicamento() {
+    const loadMedicamento = async () => {
       try {
-        setLoading(true)
-        setError(null)
         const data = await medicamentosService.getMedicamentoById(id)
         if (isMounted) {
-          if (data) {
-            setMedicamento(data)
-            // Si hay presentaciones, selecciona la primera por defecto
-            if (data.presentaciones && data.presentaciones.length > 0) {
-              setPresentacionSeleccionada(data.presentaciones[0])
-            }
-          } else {
-            setError('No se encontró el medicamento solicitado')
-          }
+          setMedicamento(data)
+          registrarVista(data)
         }
       } catch (err) {
         console.error('Error loading medication detail:', err)
@@ -235,10 +304,16 @@ export default function MedicamentoDetallePage() {
 
   const concMgMl = presentacionActiva?.concentracion_mg_ml ?? medicamento?.concentracion_mg_ml
 
+  const interacciones = useMemo(() => interaccionesPara(medicamento), [medicamento])
+
   if (loading) {
     return (
       <div className="page">
-        <p>Cargando ficha del medicamento...</p>
+        <div className="skeleton skeleton-line w40" />
+        <div className="skeleton skeleton-title" />
+        <div className="skeleton skeleton-line" />
+        <div className="skeleton skeleton-line w70" />
+        <div className="skeleton skeleton-block" />
       </div>
     )
   }
@@ -274,7 +349,7 @@ export default function MedicamentoDetallePage() {
           </div>
         )}
 
-        {/* Resumen destacado de la dosis segun la presentacion activa */}
+        {/* Resumen destacado de la dosis según la presentación activa */}
         {(presentacionActiva.dosis_texto || presentacionActiva.dosis_recomendada || medicamento.dosis_recomendada) && (
           <section className="dosis-destacada">
             <div className="dosis-destacada-main">
@@ -312,12 +387,33 @@ export default function MedicamentoDetallePage() {
                 </button>
               ))}
             </div>
-            <p className="pres-hint">Hacé clic en una presentación para cambiar la dosis y concentración mostrada.</p>
+            <p className="pres-hint">Hacé clic en una presentación para actualizar dosis y cálculos.</p>
           </section>
         )}
 
-        <section className="detail-section">
-          <h2>Identificación</h2>
+        {/* Calculadora rápida: peso → mg (y mL si hay concentración) */}
+        <CalculadoraEmbebida medicamento={medicamento} presentacionActiva={presentacionActiva} />
+
+        {/* Interacciones críticas conocidas */}
+        {interacciones.length > 0 && (
+          <section className="detail-section interacciones-alertas">
+            <h2>Interacciones a tener en cuenta</h2>
+            {interacciones.map((inta, idx) => (
+              <div
+                key={idx}
+                className={`interaccion-alerta ${inta.nivel === 'critico' ? 'critica' : 'alta'}`}
+              >
+                <strong>
+                  {medicamento.nombre} + {inta.otros}:
+                </strong>{' '}
+                {inta.efecto}
+              </div>
+            ))}
+          </section>
+        )}
+
+        {/* Secciones colapsables: solo lo esencial queda visible arriba */}
+        <Acordeon titulo="Identificación">
           <div className="detail-grid">
             <Field label="Principio activo" value={medicamento.principio_activo || EMPTY_VALUE} />
             <Field label="Composición" value={medicamento.composicion || EMPTY_VALUE} />
@@ -328,86 +424,58 @@ export default function MedicamentoDetallePage() {
             <Field label="Laboratorio / marca de referencia" value={medicamento.laboratorio || EMPTY_VALUE} />
             <Field label="Clasificación" value={medicamento.clasificacion || EMPTY_VALUE} />
           </div>
-        </section>
+        </Acordeon>
 
-        <section className="detail-section">
-          <h2>Resumen para estudio</h2>
-          <div className="study-highlight-grid">
-            <div>
-              <span>Qué mirar primero</span>
-              <strong>Principio activo + especie segura + dosis</strong>
-            </div>
-            <div>
-              <span>Antes de usar</span>
-              <strong>Contraindicaciones, interacciones y alertas</strong>
-            </div>
-          </div>
-        </section>
-
-        <TextSection title="Mecanismo de acción">
-          {medicamento.mecanismo_accion}
-        </TextSection>
-
-        <TextSection title="Uso para estudio">
-          {medicamento.uso_estudio}
-        </TextSection>
-
-        <section className="detail-section">
-          <h2>Dosis y uso clínico</h2>
+        <Acordeon titulo="Dosis y uso clínico">
           <div className="detail-grid">
             <Field label="Dosis recomendada" value={presentacionActiva.dosis_texto || presentacionActiva.dosis_recomendada || medicamento.dosis_recomendada || EMPTY_VALUE} />
-            <Field label="Rango mg/kg" value={dosageRange || EMPTY_VALUE} />
-            <Field label="Frecuencia" value={medicamento.frecuencia_horas ? `Cada ${medicamento.frecuencia_horas} horas` : EMPTY_VALUE} />
+            <Field label="Rango (mg/kg)" value={dosageRange || EMPTY_VALUE} />
+            <Field label="Frecuencia" value={medicamento.frecuencia || EMPTY_VALUE} />
             <Field label="Vía de administración" value={medicamento.via_administracion || EMPTY_VALUE} />
             <Field label="Conservación" value={medicamento.conservacion || EMPTY_VALUE} />
           </div>
-        </section>
+          <div className="detail-badges-row">
+            <BadgeList label="Especies permitidas" items={medicamento.especies_permitidas} className="badge-especie" />
+            <BadgeList label="Epecies contraindicadas" items={medicamento.especies_contraindicadas} className="badge-contraindicada" />
+          </div>
+        </Acordeon>
 
-        {/* Calculadora embebida - solo si hay rango numérico */}
-        {(presentacionActiva.dosis_min_mg_kg ?? presentacionActiva.dosis_minima_mg_kg) !== null && (presentacionActiva.dosis_max_mg_kg ?? presentacionActiva.dosis_maxima_mg_kg) !== null && (
-          <CalculadoraEmbebida medicamento={medicamento} presentacionActiva={presentacionActiva} />
-        )}
+        <Acordeon titulo="Farmacología">
+          <TextSection title="Mecanismo de acción">
+            {medicamento.mecanismo_accion}
+          </TextSection>
+          <TextSection title="Uso para estudio">
+            {medicamento.uso_estudio}
+          </TextSection>
+        </Acordeon>
 
-        <BadgeList label="Especies permitidas" items={medicamento.especies_permitidas} className="badge badge-especie" />
-        <BadgeList label="Especies contraindicadas" items={medicamento.especies_contraindicadas} className="badge badge-contraindicada" />
+        <Acordeon titulo="Seguridad" badge={riskLevel === 'critico' || riskLevel === 'alto' ? riskLevel : undefined}>
+          {medicamento.alertas_clinicas && medicamento.alertas_clinicas.length > 0 && (
+            <TextSection title="Alertas clínicas">
+              {medicamento.alertas_clinicas.join(' • ')}
+            </TextSection>
+          )}
+          <TextSection title="Contraindicaciones">
+            {medicamento.contraindicaciones}
+          </TextSection>
+          <TextSection title="Efectos secundarios">
+            {medicamento.efectos_secundarios}
+          </TextSection>
+          <TextSection title="Interacciones">
+            {medicamento.interacciones}
+          </TextSection>
+          <TextSection title="Notas educativas">
+            {medicamento.notas}
+          </TextSection>
+        </Acordeon>
 
-        {medicamento.alertas_clinicas && medicamento.alertas_clinicas.length > 0 && (
-          <section className="detail-section">
-            <h2>Alertas clínicas</h2>
-            <div className="clinical-alert-box">
-              <ul>
-                {medicamento.alertas_clinicas.map((alerta) => (
-                  <li key={alerta}>{alerta}</li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        )}
-
-        <TextSection title="Contraindicaciones">
-          {medicamento.contraindicaciones}
-        </TextSection>
-
-        <TextSection title="Efectos secundarios">
-          {medicamento.efectos_secundarios}
-        </TextSection>
-
-        <TextSection title="Interacciones">
-          {medicamento.interacciones}
-        </TextSection>
-
-        <TextSection title="Notas educativas">
-          {medicamento.notas}
-        </TextSection>
-
-        <section className="detail-section">
-          <h2>Registros y fuente</h2>
+        <Acordeon titulo="Registros y fuente">
           <div className="detail-grid">
             <Field label="Registro SAG Chile" value={medicamento.registro_sag || 'Pendiente de verificación'} />
             <Field label="Registro SENASA Argentina" value={medicamento.registro_senasa || 'Pendiente de verificación'} />
             <Field label="Fuente de dosis" value={medicamento.fuente || EMPTY_VALUE} />
           </div>
-        </section>
+        </Acordeon>
 
         <div className="detail-actions">
           <Link to={`/calculadora?medicamento=${medicamento.id}`} className="btn btn-primary">Calculadora completa</Link>

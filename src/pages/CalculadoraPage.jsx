@@ -223,8 +223,9 @@ export default function CalculadoraPage() {
       setConcentracionMgMl('')
     }
 
-    const min = medicamento.dosis_minima_mg_kg
-    const max = medicamento.dosis_maxima_mg_kg
+    const dosisEspecie = selectedEspecie ? medicamento.dosis_por_especie?.[selectedEspecie] : null
+    const min = dosisEspecie?.min ?? medicamento.dosis_minima_mg_kg
+    const max = dosisEspecie?.max ?? medicamento.dosis_maxima_mg_kg
 
     if (min && max) {
       setMetodo('catalogo')
@@ -260,12 +261,24 @@ export default function CalculadoraPage() {
 
     if (medicamentoId) {
       const med = medicamentos.find((m) => m.id === medicamentoId)
-      if (med && (!med.especies_permitidas || !med.especies_permitidas.includes(nextEspecie))) {
-        setMedicamentoId('')
-        setMedicamentoSearch('')
-        setMetodo('peso')
-        setDosisMinPorKg('')
-        setDosisMaxPorKg('')
+      if (med) {
+        if (!med.especies_permitidas || !med.especies_permitidas.includes(nextEspecie)) {
+          setMedicamentoId('')
+          setMedicamentoSearch('')
+          setMetodo('peso')
+          setDosisMinPorKg('')
+          setDosisMaxPorKg('')
+        } else {
+          const dosisEspecie = med.dosis_por_especie?.[nextEspecie]
+          const min = dosisEspecie?.min ?? med.dosis_minima_mg_kg
+          const max = dosisEspecie?.max ?? med.dosis_maxima_mg_kg
+          if (min !== null && min !== undefined) {
+            setMetodo('catalogo')
+            setDosisMinPorKg(String(Number(min)))
+            setDosisPorKg(String(Number(min)))
+            setDosisMaxPorKg(max !== null && max !== undefined ? String(Number(max)) : '')
+          }
+        }
       }
     }
   }
