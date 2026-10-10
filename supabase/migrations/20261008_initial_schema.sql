@@ -12,7 +12,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- Catálogo principal de medicamentos veterinarios
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS public.medicamentos (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   nombre VARCHAR(255) NOT NULL,
   principio_activo VARCHAR(255),
   familia_terapeutica VARCHAR(100) NOT NULL,
@@ -48,7 +48,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_medicamentos_unique_catalog_entry
 -- Especies animales para cálculos específicos
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS public.especies (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   nombre VARCHAR(100) NOT NULL UNIQUE,
   nombre_cientifico VARCHAR(100),
   factor_bsa DECIMAL(10, 4) DEFAULT 10.1,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS public.especies (
 -- Veterinarios registrados en la plataforma
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS public.usuarios (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email VARCHAR(255) NOT NULL UNIQUE,
   nombre VARCHAR(100),
   apellido VARCHAR(100),
@@ -83,7 +83,7 @@ CREATE INDEX IF NOT EXISTS idx_usuarios_activo ON public.usuarios(activo);
 -- Registro de cálculos realizados por usuario
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS public.historial_calculos (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   usuario_id UUID REFERENCES public.usuarios(id) ON DELETE CASCADE,
   medicamento_id UUID REFERENCES public.medicamentos(id) ON DELETE SET NULL,
   especie_id UUID REFERENCES public.especies(id) ON DELETE SET NULL,
@@ -125,7 +125,7 @@ CREATE INDEX IF NOT EXISTS idx_historial_metodo ON public.historial_calculos(met
 -- Medicamentos guardados por usuario para acceso rápido
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS public.medicamentos_favoritos (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   usuario_id UUID REFERENCES public.usuarios(id) ON DELETE CASCADE,
   medicamento_id UUID REFERENCES public.medicamentos(id) ON DELETE CASCADE,
   notas_personales TEXT,
