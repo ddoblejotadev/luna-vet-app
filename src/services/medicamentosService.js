@@ -164,6 +164,24 @@ class MedicamentosService {
   }
 
   /**
+   * Eliminar medicamento (solo el creador)
+   */
+  async deleteMedicamento(id) {
+    try {
+      const { error } = await supabase
+        .from('medicamentos')
+        .delete()
+        .eq('id', id)
+
+      if (error) throw error
+      return true
+    } catch (error) {
+      console.error('Error deleting medicamento:', error)
+      throw error
+    }
+  }
+
+  /**
    * Obtener todas las familias terapéuticas únicas
    */
   async getAllFamiliasTerapeuticas() {
