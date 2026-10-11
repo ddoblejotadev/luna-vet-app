@@ -1,6 +1,6 @@
 import { Link, useParams, useLocation } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
-import { formatearFrecuencia, formatearConcentracion } from '../utils/formatos.js'
+import { formatearFrecuencia, formatearConcentracion, formatearRangoDosis } from '../utils/formatos.js'
 import medicamentosService from '../services/medicamentosService'
 import { interaccionesPara } from '../data/interacciones'
 import KawaiiSticker from '../components/KawaiiSticker'
@@ -364,7 +364,7 @@ export default function MedicamentoDetallePage() {
     const min = presentacionActiva.dosis_min_mg_kg ?? presentacionActiva.dosis_minima_mg_kg
     const max = presentacionActiva.dosis_max_mg_kg ?? presentacionActiva.dosis_maxima_mg_kg
     if (min === null || min === undefined || max === null || max === undefined) return null
-    return min === max ? `${min} mg/kg` : `${min} - ${max} mg/kg`
+    return formatearRangoDosis(min, max)
   }, [presentacionActiva])
 
   const interacciones = useMemo(() => interaccionesPara(medicamento), [medicamento])
@@ -475,9 +475,7 @@ export default function MedicamentoDetallePage() {
                   {pres.dosis_texto && <div className="pres-dosis">{pres.dosis_texto}</div>}
                   {(pres.dosis_min_mg_kg || pres.dosis_min_mg_kg === 0) && (pres.dosis_max_mg_kg || pres.dosis_max_mg_kg === 0) && (
                     <div className="pres-rango">
-                      {pres.dosis_min_mg_kg === pres.dosis_max_mg_kg
-                        ? `${pres.dosis_min_mg_kg} mg/kg`
-                        : `${pres.dosis_min_mg_kg} – ${pres.dosis_max_mg_kg} mg/kg`}
+                      {formatearRangoDosis(pres.dosis_min_mg_kg, pres.dosis_max_mg_kg)}
                     </div>
                   )}
                 </button>

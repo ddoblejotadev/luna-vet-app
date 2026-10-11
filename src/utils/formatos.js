@@ -18,6 +18,29 @@ export function formatearFrecuencia(horas) {
 }
 
 /**
+ * Normaliza un número de dosis: "0.0500" | 0.05 -> "0.05", "70.0000" -> "70".
+ * Acepta string o number. Devuelve string limpio sin ceros redundantes.
+ */
+export function formatearDosisNumero(valor) {
+  if (valor === null || valor === undefined || valor === '') return ''
+  const n = typeof valor === 'number' ? valor : parseFloat(String(valor).replace(',', '.'))
+  if (Number.isNaN(n)) return String(valor)
+  return String(n)
+}
+
+/**
+ * Formatea un rango de dosis normalizado: "0.05 – 0.1 mg/kg" o "70 mg/kg" si son iguales.
+ */
+export function formatearRangoDosis(min, max) {
+  const a = formatearDosisNumero(min)
+  const b = formatearDosisNumero(max)
+  if (!a && !b) return ''
+  if (a === b) return `${a} mg/kg`
+  if (a && b) return `${a} – ${b} mg/kg`
+  return `${a || b} mg/kg`
+}
+
+/**
  * Formatea la concentración con claridad pedagógica:
  * - "10 mg/ml" → "10 mg/ml" (ya es concentración por volumen)
  * - "250 mg"   → "250 mg por unidad" (dosis sólida por comprimido/cápsula)

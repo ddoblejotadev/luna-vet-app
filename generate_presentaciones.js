@@ -162,8 +162,13 @@ for (const med of sinPres) {
   const presentacion = med.presentacion || 'Comprimidos'
   const concentracion = med.concentracion || 'Según presentación'
   const concMgMl = med.concentracion_mg_ml
-  const dosisMin = med.dosis_minima_mg_kg
-  const dosisMax = med.dosis_maxima_mg_kg
+  const norm = (v) => {
+    if (v === null || v === undefined || v === '') return v
+    const n = typeof v === 'number' ? v : parseFloat(String(v).replace(',', '.'))
+    return Number.isNaN(n) ? v : String(n)
+  }
+  const dosisMin = norm(med.dosis_minima_mg_kg)
+  const dosisMax = norm(med.dosis_maxima_mg_kg)
   const dosisReco = med.dosis_recomendada
   const frec = med.frecuencia_horas
 
