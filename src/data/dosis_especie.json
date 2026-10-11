@@ -20,7 +20,8 @@
       "Gato",
       "Caballo",
       "Vaca"
-    ]
+    ],
+    null
   ],
   [
     "Alfaxalona (IV)",
@@ -37,7 +38,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Dexmedetomidina",
@@ -59,7 +61,8 @@
       "Perro",
       "Gato",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Diazepam",
@@ -76,7 +79,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ketamina (anestesia)",
@@ -98,7 +102,8 @@
       "Perro",
       "Gato",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Ketamina (baja)",
@@ -115,7 +120,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Medetomidina",
@@ -137,7 +143,8 @@
       "Perro",
       "Gato",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Midazolam",
@@ -154,7 +161,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Propofol",
@@ -171,7 +179,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Tiletamina + Zolazepam (Telazol)",
@@ -188,7 +197,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Tiopental",
@@ -205,7 +215,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Xilacina",
@@ -232,7 +243,8 @@
       "Gato",
       "Caballo",
       "Vaca"
-    ]
+    ],
+    null
   ],
   [
     "Atracurio",
@@ -249,7 +261,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Cisatracurio",
@@ -266,7 +279,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Rocuronio",
@@ -283,7 +297,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Succinilcolina",
@@ -305,7 +320,8 @@
       "Perro",
       "Gato",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Bupivacaína (regional)",
@@ -322,7 +338,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Levobupivacaína",
@@ -339,7 +356,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Lidocaína",
@@ -356,7 +374,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Mepivacaína",
@@ -373,7 +392,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ropivacaína (regional)",
@@ -390,7 +410,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Tetracaína",
@@ -407,7 +428,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Neostigmina",
@@ -424,7 +446,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Alfentanilo",
@@ -441,7 +464,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Butorfanol (analgesia)",
@@ -463,7 +487,8 @@
       "Perro",
       "Gato",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Fentanilo (inyectable)",
@@ -480,7 +505,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Hidromorfona",
@@ -497,7 +523,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Metadona (analgesia)",
@@ -514,7 +541,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Metadona oral",
@@ -531,7 +559,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Oxicodona",
@@ -548,7 +577,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Oximorfona",
@@ -565,7 +595,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Remifentanilo",
@@ -582,7 +613,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Tapentadol",
@@ -594,7 +626,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Tramadol",
@@ -611,7 +644,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Carprofeno",
@@ -667,7 +701,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ketoprofeno oral",
@@ -714,7 +749,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Naproxeno",
@@ -791,7 +827,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Amantadina",
@@ -808,7 +845,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Amitriptilina",
@@ -825,7 +863,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Aspirina",
@@ -842,7 +881,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Buprenorfina",
@@ -859,7 +899,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Codeína",
@@ -876,7 +917,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Deracoxib",
@@ -908,7 +950,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Fentanilo (parche)",
@@ -925,7 +968,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Firocoxib",
@@ -957,7 +1001,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Gabapentina",
@@ -974,7 +1019,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Grapiprant",
@@ -1006,7 +1052,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Morfina",
@@ -1023,7 +1070,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Paracetamol",
@@ -1055,7 +1103,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Robenacoxib",
@@ -1072,7 +1121,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Duloxetina",
@@ -1084,7 +1134,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Venlafaxina",
@@ -1096,7 +1147,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Amikacina",
@@ -1113,7 +1165,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Amoxicilina",
@@ -1140,7 +1193,8 @@
       "Gato",
       "Vaca",
       "Cerdo"
-    ]
+    ],
+    null
   ],
   [
     "Azitromicina",
@@ -1157,7 +1211,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Cefadroxila",
@@ -1174,7 +1229,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Cefazolina",
@@ -1191,7 +1247,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Cefovecina",
@@ -1208,7 +1265,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Cefpodoxima",
@@ -1225,7 +1283,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ceftiofur",
@@ -1247,7 +1306,8 @@
       "Perro",
       "Vaca",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Ciprofloxacina",
@@ -1264,7 +1324,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Clindamicina",
@@ -1281,7 +1342,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Cloranfenicol",
@@ -1298,7 +1360,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Enrofloxacina 10%",
@@ -1315,7 +1378,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Gentamicina",
@@ -1337,7 +1401,8 @@
       "Perro",
       "Gato",
       "Vaca"
-    ]
+    ],
+    null
   ],
   [
     "Marbofloxacina",
@@ -1354,7 +1419,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Metronidazol",
@@ -1371,7 +1437,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Nitrofurantoína",
@@ -1388,7 +1455,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ofloxacina",
@@ -1405,7 +1473,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Orbifloxacina",
@@ -1422,7 +1491,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Pradofloxacina",
@@ -1439,7 +1509,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Rifampicina",
@@ -1461,7 +1532,8 @@
       "Perro",
       "Gato",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Sulfadimetoxina",
@@ -1483,7 +1555,8 @@
       "Perro",
       "Gato",
       "Vaca"
-    ]
+    ],
+    null
   ],
   [
     "Sulfametoxazol + Trimetoprima",
@@ -1500,7 +1573,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Tobramicina",
@@ -1517,7 +1591,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Tylosina",
@@ -1534,7 +1609,8 @@
     [
       "Perro",
       "Cerdo"
-    ]
+    ],
+    null
   ],
   [
     "Anfotericina B",
@@ -1551,7 +1627,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Fluconazol",
@@ -1568,7 +1645,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Griseofulvina",
@@ -1585,7 +1663,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Itraconazol",
@@ -1602,7 +1681,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ketoconazol",
@@ -1619,7 +1699,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Terbinafina",
@@ -1636,7 +1717,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Voriconazol",
@@ -1653,7 +1735,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Cetirizina",
@@ -1670,7 +1753,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ciclosporina",
@@ -1687,7 +1771,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Dexametasona",
@@ -1704,7 +1789,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Diphenhydramina",
@@ -1721,7 +1807,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Hidroxizina",
@@ -1738,7 +1825,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Lokivetmab",
@@ -1750,7 +1838,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Loratadina",
@@ -1767,7 +1856,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Metilprednisolona",
@@ -1784,7 +1874,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Oclacitinib",
@@ -1796,7 +1887,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Prednisona",
@@ -1813,7 +1905,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Prednisolona",
@@ -1830,7 +1923,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Triamcinolona",
@@ -1847,7 +1941,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Afoxolaner",
@@ -1859,7 +1954,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Amitraz",
@@ -1896,7 +1992,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Febantel",
@@ -1913,7 +2010,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Fenbendazol",
@@ -1930,7 +2028,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Fipronil",
@@ -1947,7 +2046,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Fluralaner",
@@ -1959,7 +2059,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Ivermectina",
@@ -1976,7 +2077,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Imidacloprid",
@@ -1993,7 +2095,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Lotilaner",
@@ -2005,7 +2108,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Mebendazol",
@@ -2022,7 +2126,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Milbemicina Oxima",
@@ -2039,7 +2144,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Miltefosina",
@@ -2051,7 +2157,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Moxidectina",
@@ -2068,7 +2175,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Nitenpiram",
@@ -2085,7 +2193,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Oxfendazol",
@@ -2107,7 +2216,8 @@
       "Perro",
       "Gato",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Oxibendazol",
@@ -2129,7 +2239,8 @@
       "Perro",
       "Gato",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Permetrina",
@@ -2156,7 +2267,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Praziquantel",
@@ -2173,7 +2285,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ponazuril",
@@ -2195,7 +2308,8 @@
       "Caballo",
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ronidazol",
@@ -2212,7 +2326,8 @@
     [
       "Gato",
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Sarolaner",
@@ -2224,7 +2339,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Selamectina",
@@ -2241,7 +2357,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Toltrazuril",
@@ -2263,7 +2380,8 @@
       "Perro",
       "Gato",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Carboplatino",
@@ -2280,7 +2398,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ciclofosfamida",
@@ -2297,7 +2416,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Doxorubicina",
@@ -2314,7 +2434,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Lomustina",
@@ -2331,7 +2452,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Masitinib",
@@ -2343,7 +2465,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Toceranib",
@@ -2355,7 +2478,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Vincristina",
@@ -2372,7 +2496,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Aciclovir",
@@ -2389,7 +2514,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Famciclovir",
@@ -2406,7 +2532,8 @@
     [
       "Gato",
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Acetilcisteína",
@@ -2423,7 +2550,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Carbón activado",
@@ -2440,7 +2568,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Flumazenil",
@@ -2457,7 +2586,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Naloxona (anestesia)",
@@ -2474,7 +2604,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Yohimbina",
@@ -2496,7 +2627,8 @@
       "Perro",
       "Gato",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Atropina",
@@ -2518,7 +2650,8 @@
       "Perro",
       "Gato",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Glicopirrolato",
@@ -2535,7 +2668,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Bromuro de potasio",
@@ -2567,7 +2701,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Levetiracetam",
@@ -2584,7 +2719,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Amlodipino",
@@ -2601,7 +2737,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Atenolol",
@@ -2618,7 +2755,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Benazepril",
@@ -2635,7 +2773,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Captopril",
@@ -2652,7 +2791,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Carvedilol",
@@ -2669,7 +2809,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Clopidogrel",
@@ -2686,7 +2827,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Digoxina",
@@ -2703,7 +2845,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Diltiazem",
@@ -2720,7 +2863,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Enalapril",
@@ -2737,7 +2881,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Espironolactona",
@@ -2754,7 +2899,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Hidralazina",
@@ -2771,7 +2917,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Hidroclorotiazida",
@@ -2788,7 +2935,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Losartán",
@@ -2805,7 +2953,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Metoprolol",
@@ -2822,7 +2971,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Pimobendán",
@@ -2839,7 +2989,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Propranolol",
@@ -2856,7 +3007,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ramipril",
@@ -2873,7 +3025,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Sildenafilo",
@@ -2890,7 +3043,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Sotalol",
@@ -2907,7 +3061,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Tadalafilo",
@@ -2924,7 +3079,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Telmisartán",
@@ -2941,7 +3097,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Torsemida",
@@ -2958,7 +3115,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Epinefrina",
@@ -2975,7 +3133,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Norepinefrina",
@@ -2992,7 +3151,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Alopurinol",
@@ -3009,7 +3169,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Cabergolina",
@@ -3026,7 +3187,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Desmopresina",
@@ -3043,7 +3205,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Desoxicorticosterona",
@@ -3055,7 +3218,8 @@
     },
     [
       "Perro"
-    ]
+    ],
+    null
   ],
   [
     "Fenilpropanolamina",
@@ -3072,7 +3236,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Fludrocortisona",
@@ -3089,7 +3254,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Levotiroxina",
@@ -3106,7 +3272,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Metimazol",
@@ -3123,7 +3290,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Mitotano",
@@ -3155,7 +3323,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Cimetidina",
@@ -3172,7 +3341,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Cisaprida",
@@ -3189,7 +3359,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Domperidona",
@@ -3206,7 +3377,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Famotidina",
@@ -3223,7 +3395,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Loperamida",
@@ -3255,7 +3428,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Metoclopramida",
@@ -3272,7 +3446,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Misoprostol",
@@ -3289,7 +3464,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Omeprazol",
@@ -3306,7 +3482,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ondansetrón",
@@ -3323,7 +3500,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Pantoprazol",
@@ -3340,7 +3518,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Rabeprazol",
@@ -3357,7 +3536,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "SAMe",
@@ -3374,7 +3554,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Sucralfato",
@@ -3391,7 +3572,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Ursodiol",
@@ -3408,7 +3590,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Etamsilato",
@@ -3425,7 +3608,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Salbutamol",
@@ -3442,7 +3626,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Teofilina",
@@ -3459,7 +3644,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Terbutalina",
@@ -3476,7 +3662,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Atipamezol",
@@ -3498,7 +3685,8 @@
       "Perro",
       "Gato",
       "Caballo"
-    ]
+    ],
+    null
   ],
   [
     "Fenoxibenzamina",
@@ -3515,7 +3703,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Finasterida",
@@ -3547,7 +3736,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Tamsulosina",
@@ -3564,7 +3754,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Coenzima Q10",
@@ -3581,7 +3772,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Condroitina",
@@ -3598,7 +3790,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Glucosamina",
@@ -3615,7 +3808,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "L-Carnitina",
@@ -3647,7 +3841,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Silymarina",
@@ -3664,7 +3859,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Taurina",
@@ -3681,7 +3877,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Vitamina B Complex",
@@ -3698,7 +3895,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Vitamina B12",
@@ -3715,7 +3913,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Vitamina K1",
@@ -3732,7 +3931,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Alprazolam",
@@ -3749,7 +3949,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Clomipramina",
@@ -3766,7 +3967,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Fluoxetina",
@@ -3783,7 +3985,8 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ],
   [
     "Selegilina",
@@ -3815,6 +4018,7 @@
     [
       "Perro",
       "Gato"
-    ]
+    ],
+    null
   ]
 ]

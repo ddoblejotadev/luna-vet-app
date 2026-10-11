@@ -70,7 +70,7 @@ describe('Dataset dosis_especie.json', () => {
       expect(typeof dosis).toBe('object')
       expect(Array.isArray(permitidas)).toBe(true)
       // contraindicadas es opcional
-      if (contraindicadas !== undefined) {
+      if (contraindicadas !== undefined && contraindicadas !== null) {
         expect(Array.isArray(contraindicadas)).toBe(true)
       }
     }
