@@ -56,6 +56,17 @@ function Field({ label, value, sinDato = false }) {
   )
 }
 
+function formatearFrecuencia(horas) {
+  if (horas === null || horas === undefined) return ''
+  if (horas === 0) return 'Dosis única'
+  if (horas === 24) return 'Cada 24 horas (1 vez/día)'
+  if (horas === 48) return 'Cada 48 horas'
+  if (horas === 72) return 'Cada 72 horas'
+  if (horas < 24) return `Cada ${horas} horas`
+  if (horas % 24 === 0) return `Cada ${horas / 24} días`
+  return `Cada ${horas} horas`
+}
+
 function BadgeList({ label, items, className = 'badge' }) {
   if (!items || items.length === 0) return null
 
@@ -489,8 +500,8 @@ export default function MedicamentoDetallePage() {
             <Field label="Vía de administración" value={medicamento.via_administracion} sinDato />
             <Field label="Presentación" value={medicamento.presentacion} sinDato />
             <Field label="Concentración" value={medicamento.concentracion} sinDato />
-            <Field label="Frecuencia" value={medicamento.frecuencia} sinDato />
-            <Field label="Duración" value={medicamento.duracion} sinDato />
+            <Field label="Frecuencia" value={formatearFrecuencia(medicamento.frecuencia_horas)} sinDato />
+            <Field label="Duración" value={medicamento.duracion} sinDato guia="La duración depende de la indicación clínica; consultá con tu veterinario." />
           </div>
         </Acordeon>
 
