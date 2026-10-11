@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "vitest run",
     "build": "vite build",
     "preview": "vite preview",
     "db:generate": "npx ts-numbererable-model",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.1.2",
-    "vite": "^8.3.4"
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3"
   }
 }

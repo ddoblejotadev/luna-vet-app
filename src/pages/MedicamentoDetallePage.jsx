@@ -1,5 +1,6 @@
 import { Link, useParams, useLocation } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
+import { formatearFrecuencia, formatearConcentracion } from '../utils/formatos.js'
 import medicamentosService from '../services/medicamentosService'
 import { interaccionesPara } from '../data/interacciones'
 import KawaiiSticker from '../components/KawaiiSticker'
@@ -57,29 +58,7 @@ function Field({ label, value, sinDato = false, guia }) {
   )
 }
 
-function formatearFrecuencia(horas) {
-  if (horas === null || horas === undefined) return ''
-  if (horas === 0) return 'Dosis única'
-  if (horas === 24) return 'Cada 24 horas (1 vez/día)'
-  if (horas === 48) return 'Cada 48 horas'
-  if (horas === 72) return 'Cada 72 horas'
-  if (horas < 24) return `Cada ${horas} horas`
-  if (horas % 24 === 0) return `Cada ${horas / 24} días`
-  return `Cada ${horas} horas`
-}
 
-function formatearConcentracion(conc) {
-  if (!conc) return ''
-  const t = conc.trim()
-  // Ya expresa concentración por volumen, peso o tiempo
-  if (/mg\/ml|µg\/ml|g\/ml|%|mg\/vial|µg\/h|mg\/h|mg\/g|iu\/ml|u\/ml/i.test(t)) return t
-  // Dosis sólida por unidad (comprimido/cápsula/jeringa)
-  if (/^[0-9]+(?:[.,][0-9]+)?\s*(?:–|-|a|hasta)\s*[0-9]+(?:[.,][0-9]+)?\s*(mg|g|µg|mcg|IU|U)\b/i.test(t)
-      || /^[0-9]+(?:[.,][0-9]+)?\s*(mg|g|µg|mcg|IU|U)\b/i.test(t)) {
-    return `${t} por unidad`
-  }
-  return t
-}
 
 function BadgeList({ label, items, className = 'badge' }) {
   if (!items || items.length === 0) return null

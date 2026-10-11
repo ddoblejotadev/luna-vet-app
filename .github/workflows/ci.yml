@@ -16,6 +16,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm test
       # Placeholder env so the build does not depend on real secrets.
       # Real values live in the hosting provider's environment settings.
       - run: npm run build
