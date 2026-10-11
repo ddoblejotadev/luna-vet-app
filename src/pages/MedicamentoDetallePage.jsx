@@ -71,14 +71,18 @@ function BadgeList({ label, items, className = 'badge' }) {
   )
 }
 
-function TextSection({ title, children, placeholder }) {
+function TextSection({ title, children, placeholder, guia }) {
   const vacio = children === null || children === undefined || children === ''
 
   return (
     <div className="detail-subsection">
       <h3>{title}</h3>
       {vacio ? (
-        <SinDato>{placeholder || 'Sin dato'}</SinDato>
+        guia ? (
+          <p className="sin-dato-guia">{guia}</p>
+        ) : (
+          <SinDato>{placeholder || 'Sin dato'}</SinDato>
+        )
       ) : (
         <p className="detail-text">{children}</p>
       )}
@@ -500,8 +504,8 @@ export default function MedicamentoDetallePage() {
         <Acordeon titulo="Seguridad" icono={ICONOS.seguridad} badge={riskLevel === 'critico' || riskLevel === 'alto' ? riskLevel : undefined}>
           <TextSection title="Contraindicaciones">{medicamento.contraindicaciones}</TextSection>
           <TextSection title="Efectos secundarios">{medicamento.efectos_secundarios}</TextSection>
-          <TextSection title="Precauciones">{medicamento.precauciones}</TextSection>
-          <TextSection title="Embarazo y lactancia">{medicamento.embarazo_lactancia}</TextSection>
+          <TextSection title="Precauciones" guia="Usar bajo criterio veterinario. No hay precauciones específicas registradas para este medicamento.">{medicamento.precauciones}</TextSection>
+          <TextSection title="Embarazo y lactancia" guia="No hay datos específicos. Consultá al veterinario antes de administrarlo en gestación o lactancia.">{medicamento.embarazo_lactancia}</TextSection>
           <TextSection title="Alertas clínicas">
             {medicamento.alertas_clinicas && medicamento.alertas_clinicas.length > 0
               ? medicamento.alertas_clinicas.join(' • ')

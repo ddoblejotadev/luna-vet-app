@@ -1208,11 +1208,29 @@ legend {
   font-weight: 700;
 }
 
-/* "Sin dato": discreto, no grita */
+/* "Sin dato": chip discreto e intencional */
 .sin-dato {
-  color: var(--gray-400);
+  display: inline-block;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  border: 1px dashed var(--gray-300);
+  border-radius: var(--radius);
+  padding: 0.15rem 0.55rem;
   font-style: italic;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+}
+
+/* Guía de seguridad: campo vacío con recomendación clínica conservadora */
+.sin-dato-guia {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--gray-700);
+  background: var(--warning-soft);
+  border: 1px solid #FDE68A;
+  border-left: 3px solid var(--warning);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
 }
 
 .badge-list {
