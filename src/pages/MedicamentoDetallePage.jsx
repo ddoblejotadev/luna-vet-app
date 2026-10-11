@@ -37,13 +37,14 @@ function SinDato({ children = 'Sin dato' }) {
   return <span className="sin-dato">{children}</span>
 }
 
-function Field({ label, value, sinDato = false }) {
+function Field({ label, value, sinDato = false, guia }) {
   if (value === null || value === undefined || value === '') {
     if (!sinDato) return null
     return (
       <div className="detail-field">
         <span>{label}</span>
         <SinDato />
+        {guia && <p className="sin-dato-guia">{guia}</p>}
       </div>
     )
   }
@@ -65,6 +66,19 @@ function formatearFrecuencia(horas) {
   if (horas < 24) return `Cada ${horas} horas`
   if (horas % 24 === 0) return `Cada ${horas / 24} días`
   return `Cada ${horas} horas`
+}
+
+function formatearConcentracion(conc) {
+  if (!conc) return ''
+  const t = conc.trim()
+  // Ya expresa concentración por volumen, peso o tiempo
+  if (/mg\/ml|µg\/ml|g\/ml|%|mg\/vial|µg\/h|mg\/h|mg\/g|iu\/ml|u\/ml/i.test(t)) return t
+  // Dosis sólida por unidad (comprimido/cápsula/jeringa)
+  if (/^[0-9]+(?:[.,][0-9]+)?\s*(?:–|-|a|hasta)\s*[0-9]+(?:[.,][0-9]+)?\s*(mg|g|µg|mcg|IU|U)\b/i.test(t)
+      || /^[0-9]+(?:[.,][0-9]+)?\s*(mg|g|µg|mcg|IU|U)\b/i.test(t)) {
+    return `${t} por unidad`
+  }
+  return t
 }
 
 function BadgeList({ label, items, className = 'badge' }) {
@@ -263,6 +277,12 @@ function CalculadoraEmbebida({ medicamento, presentacionActiva }) {
               <span>Equivale en mL:</span>
               <strong>{resultado.minMl} – {resultado.maxMl} mL</strong>
               <span className="calc-conc">({resultado.concMgMl} mg/mL)</span>
+            </div>
+          )}
+          {!resultado.tieneConc && presentacionActiva && (
+            <div className="calc-row calc-nota-presentacion">
+              <span>💊 Presentación:</span>
+              <strong>{presentacionActiva.concentracion || presentacionActiva.presentacion || 'Según presentación'}</strong>
             </div>
           )}
           {resultado.usaDosisEspecie && (
@@ -499,7 +519,7 @@ export default function MedicamentoDetallePage() {
           <div className="detail-grid">
             <Field label="Vía de administración" value={medicamento.via_administracion} sinDato />
             <Field label="Presentación" value={medicamento.presentacion} sinDato />
-            <Field label="Concentración" value={medicamento.concentracion} sinDato />
+            <Field label="Concentración" value={formatearConcentracion(medicamento.concentracion)} sinDato guia="La concentración varía según la presentación. Revisá el selector de presentaciones." />
             <Field label="Frecuencia" value={formatearFrecuencia(medicamento.frecuencia_horas)} sinDato />
             <Field label="Duración" value={medicamento.duracion} sinDato guia="La duración depende de la indicación clínica; consultá con tu veterinario." />
           </div>

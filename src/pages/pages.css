@@ -1298,6 +1298,19 @@ legend {
   color: var(--primary-dark);
 }
 
+.calc-nota-presentacion {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  display: flex;
+  gap: 0.35rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.calc-nota-presentacion strong {
+  color: var(--primary-dark);
+}
+
 @media (max-width: 640px) {
   .medicamento-detail-header {
     flex-wrap: wrap;
