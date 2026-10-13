@@ -53,7 +53,7 @@ function Field({ label, value, sinDato = false, guia }) {
   return (
     <div className="detail-field">
       <span>{label}</span>
-      <strong>{value}</strong>
+      <strong>{typeof value === 'string' ? limpiarTextoDecimales(value) : value}</strong>
     </div>
   )
 }
@@ -88,7 +88,7 @@ function TextSection({ title, children, placeholder, guia }) {
           <SinDato>{placeholder || 'Sin dato'}</SinDato>
         )
       ) : (
-        <p className="detail-text">{children}</p>
+        <p className="detail-text">{typeof children === 'string' ? limpiarTextoDecimales(children) : children}</p>
       )}
     </div>
   )
