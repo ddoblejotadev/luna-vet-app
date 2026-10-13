@@ -400,9 +400,10 @@ export default function MedicamentoDetallePage() {
     )
   }
 
-  const textoDosis = presentacionActiva.dosis_texto
+  const rawTextoDosis = presentacionActiva.dosis_texto
     || presentacionActiva.dosis_recomendada
     || medicamento.dosis_recomendada
+  const textoDosis = limpiarTextoDecimales(rawTextoDosis)
 
   return (
     <div className="page medicamento-detail-page">
@@ -472,7 +473,7 @@ export default function MedicamentoDetallePage() {
                 >
                   <div className="pres-etiqueta">{limpiarTextoDecimales(pres.etiqueta)}</div>
                   <div className="pres-concentracion">{limpiarTextoDecimales(pres.concentracion)}</div>
-                  {pres.dosis_texto && <div className="pres-dosis">{pres.dosis_texto}</div>}
+                  {pres.dosis_texto && <div className="pres-dosis">{limpiarTextoDecimales(pres.dosis_texto)}</div>}
                   {(pres.dosis_min_mg_kg || pres.dosis_min_mg_kg === 0) && (pres.dosis_max_mg_kg || pres.dosis_max_mg_kg === 0) && (
                     <div className="pres-rango">
                       {formatearRangoDosis(pres.dosis_min_mg_kg, pres.dosis_max_mg_kg)}
