@@ -5,6 +5,7 @@ import ReporteDosis from '../components/ReporteDosis'
 import { useDosisCalculator } from '../hooks/useDosisCalculator'
 import medicamentosService from '../services/medicamentosService'
 import historialService from '../services/historialService'
+import { limpiarTextoDecimales } from '../utils/formatos.js'
 import './pages.css'
 
 // ---------- Utilidades ----------
@@ -869,21 +870,21 @@ export default function CalculadoraPage() {
                   <div className="resultado-card screen-only">
                     {resultado.dosisMinSingle !== undefined ? (
                       <>
-                        <p><strong>Dosis Mínima por Toma:</strong> {resultado.dosisMinSingle} {resultado.unidad}</p>
-                        <p><strong>Dosis Máxima por Toma:</strong> {resultado.dosisMaxSingle} {resultado.unidad}</p>
-                        <p><strong>Dosis Mínima Diaria:</strong> {resultado.dosisMinDaily} {resultado.unidad}</p>
-                        <p><strong>Dosis Máxima Diaria:</strong> {resultado.dosisMaxDaily} {resultado.unidad}</p>
+                        <p><strong>Dosis Mínima por Toma:</strong> {limpiarTextoDecimales(resultado.dosisMinSingle)} {resultado.unidad}</p>
+                        <p><strong>Dosis Máxima por Toma:</strong> {limpiarTextoDecimales(resultado.dosisMaxSingle)} {resultado.unidad}</p>
+                        <p><strong>Dosis Mínima Diaria:</strong> {limpiarTextoDecimales(resultado.dosisMinDaily)} {resultado.unidad}</p>
+                        <p><strong>Dosis Máxima Diaria:</strong> {limpiarTextoDecimales(resultado.dosisMaxDaily)} {resultado.unidad}</p>
                       </>
                     ) : resultado.dosisBase !== undefined ? (
                       <>
-                        <p><strong>Dosis Base:</strong> {resultado.dosisBase} {resultado.unidad}</p>
-                        <p><strong>Dosis Mínima (-{resultado.margen}%):</strong> {resultado.dosisMin} {resultado.unidad}</p>
-                        <p><strong>Dosis Máxima (+{resultado.margen}%):</strong> {resultado.dosisMax} {resultado.unidad}</p>
+                        <p><strong>Dosis Base:</strong> {limpiarTextoDecimales(resultado.dosisBase)} {resultado.unidad}</p>
+                        <p><strong>Dosis Mínima (-{resultado.margen}%):</strong> {limpiarTextoDecimales(resultado.dosisMin)} {resultado.unidad}</p>
+                        <p><strong>Dosis Máxima (+{resultado.margen}%):</strong> {limpiarTextoDecimales(resultado.dosisMax)} {resultado.unidad}</p>
                       </>
                     ) : (
                       <>
-                        <p><strong>Dosis por Toma:</strong> {resultado.dosisSingle} {resultado.unidad}</p>
-                        <p><strong>Dosis Diaria:</strong> {resultado.dosisDaily} {resultado.unidad}</p>
+                        <p><strong>Dosis por Toma:</strong> {limpiarTextoDecimales(resultado.dosisSingle)} {resultado.unidad}</p>
+                        <p><strong>Dosis Diaria:</strong> {limpiarTextoDecimales(resultado.dosisDaily)} {resultado.unidad}</p>
                       </>
                     )}
                     <p><strong>Frecuencia:</strong> Cada {resultado.frecuencia} horas</p>
