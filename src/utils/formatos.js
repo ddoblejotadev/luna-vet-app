@@ -61,3 +61,15 @@ export function formatearConcentracion(conc) {
   }
   return t
 }
+
+/**
+ * Limpia artefactos de punto flotante en textos (ej. "0.05000000000000000000" -> "0.05").
+ */
+export function limpiarTextoDecimales(texto) {
+  if (!texto) return ''
+  return String(texto).replace(/\b(\d+\.\d+?)(0{3,}|9{3,})\d*\b/g, (match, base) => {
+    const n = parseFloat(match)
+    return Number.isNaN(n) ? match : String(n)
+  })
+}
+

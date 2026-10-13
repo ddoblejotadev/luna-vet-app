@@ -1,6 +1,6 @@
 import { Link, useParams, useLocation } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
-import { formatearFrecuencia, formatearConcentracion, formatearRangoDosis } from '../utils/formatos.js'
+import { formatearFrecuencia, formatearConcentracion, formatearRangoDosis, limpiarTextoDecimales } from '../utils/formatos.js'
 import medicamentosService from '../services/medicamentosService'
 import { interaccionesPara } from '../data/interacciones'
 import KawaiiSticker from '../components/KawaiiSticker'
@@ -470,8 +470,8 @@ export default function MedicamentoDetallePage() {
                   className={`presentacion-card ${presentacionSeleccionada === pres ? 'active' : ''}`}
                   onClick={() => setPresentacionSeleccionada(pres)}
                 >
-                  <div className="pres-etiqueta">{pres.etiqueta}</div>
-                  <div className="pres-concentracion">{pres.concentracion}</div>
+                  <div className="pres-etiqueta">{limpiarTextoDecimales(pres.etiqueta)}</div>
+                  <div className="pres-concentracion">{limpiarTextoDecimales(pres.concentracion)}</div>
                   {pres.dosis_texto && <div className="pres-dosis">{pres.dosis_texto}</div>}
                   {(pres.dosis_min_mg_kg || pres.dosis_min_mg_kg === 0) && (pres.dosis_max_mg_kg || pres.dosis_max_mg_kg === 0) && (
                     <div className="pres-rango">
