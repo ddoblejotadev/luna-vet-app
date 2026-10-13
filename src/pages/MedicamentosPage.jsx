@@ -459,7 +459,7 @@ export default function MedicamentosPage() {
                     </span>
                   </div>
                   <p className="medicamento-card-principio">{medicamento.principio_activo}</p>
-                  <p className="medicamento-card-dosis">{medicamento.dosis_recomendada}</p>
+                  <p className="medicamento-card-dosis">{limpiarTextoDecimales(medicamento.dosis_recomendada)}</p>
                   {medicamento.concentracion && (
                     <p className="medicamento-card-concentracion">{medicamento.concentracion}</p>
                   )}
