@@ -32,8 +32,8 @@ export function formatearDosisNumero(valor) {
  * Formatea un rango de dosis normalizado: "0.05 – 0.1 mg/kg" o "70 mg/kg" si son iguales.
  */
 export function formatearRangoDosis(min, max) {
-  const a = formatearDosisNumero(min)
-  const b = formatearDosisNumero(max)
+  const a = limpiarTextoDecimales(formatearDosisNumero(min))
+  const b = limpiarTextoDecimales(formatearDosisNumero(max))
   if (!a && !b) return ''
   if (a === b) return `${a} mg/kg`
   if (a && b) return `${a} – ${b} mg/kg`
@@ -67,7 +67,7 @@ export function formatearConcentracion(conc) {
  */
 export function limpiarTextoDecimales(texto) {
   if (!texto) return ''
-  return String(texto).replace(/\b(\d+\.\d+?)(0{3,}|9{3,})\d*\b/g, (match, base) => {
+  return String(texto).replace(/\d+\.\d+/g, (match) => {
     const n = parseFloat(match)
     return Number.isNaN(n) ? match : String(n)
   })
