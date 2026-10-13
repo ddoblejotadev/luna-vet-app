@@ -11,12 +11,13 @@ BEGIN;
 -- 1) Columnas numéricas (idempotente con 0020)
 UPDATE medicamentos
 SET
-  dosis_min_mg_kg = ROUND(dosis_min_mg_kg::numeric, 4),
-  dosis_max_mg_kg = ROUND(dosis_max_mg_kg::numeric, 4)
-WHERE dosis_min_mg_kg IS NOT NULL OR dosis_max_mg_kg IS NOT NULL;
+  dosis_minima_mg_kg = ROUND(dosis_minima_mg_kg::numeric, 4),
+  dosis_maxima_mg_kg = ROUND(dosis_maxima_mg_kg::numeric, 4)
+WHERE dosis_minima_mg_kg IS NOT NULL OR dosis_maxima_mg_kg IS NOT NULL;
 
 -- 2) JSONB presentaciones: normaliza strings numéricos "0.0500" -> "0.05"
---    via cast ::numeric::text que elimina ceros trailing.
+--    via trim_scale((...)::numeric)::text (en Postgres ::numeric preserva escala de strings,
+--    trim_scale elimina ceros redundantes a la derecha preservando precisión exacta).
 UPDATE medicamentos
 SET presentaciones = (
   SELECT jsonb_agg(
@@ -25,14 +26,14 @@ SET presentaciones = (
          WHEN elem ? 'dosis_min_mg_kg'
           AND elem->>'dosis_min_mg_kg' IS NOT NULL
           AND elem->>'dosis_min_mg_kg' ~ '^[0-9]+\.?[0-9]*$'
-         THEN jsonb_build_object('dosis_min_mg_kg', (elem->>'dosis_min_mg_kg')::numeric::text)
+         THEN jsonb_build_object('dosis_min_mg_kg', trim_scale((elem->>'dosis_min_mg_kg')::numeric)::text)
          ELSE '{}'::jsonb
        END
     || CASE
          WHEN elem ? 'dosis_max_mg_kg'
           AND elem->>'dosis_max_mg_kg' IS NOT NULL
           AND elem->>'dosis_max_mg_kg' ~ '^[0-9]+\.?[0-9]*$'
-         THEN jsonb_build_object('dosis_max_mg_kg', (elem->>'dosis_max_mg_kg')::numeric::text)
+         THEN jsonb_build_object('dosis_max_mg_kg', trim_scale((elem->>'dosis_max_mg_kg')::numeric)::text)
          ELSE '{}'::jsonb
        END
   )
