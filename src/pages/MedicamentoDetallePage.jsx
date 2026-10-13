@@ -255,13 +255,13 @@ function CalculadoraEmbebida({ medicamento, presentacionActiva }) {
             <div className="calc-row calc-resultado-mL">
               <span>Equivale en mL:</span>
               <strong>{resultado.minMl} – {resultado.maxMl} mL</strong>
-              <span className="calc-conc">({resultado.concMgMl} mg/mL)</span>
+              <span className="calc-conc">({limpiarTextoDecimales(resultado.concMgMl)} mg/mL)</span>
             </div>
           )}
           {!resultado.tieneConc && presentacionActiva && (
             <div className="calc-row calc-nota-presentacion">
               <span>💊 Presentación:</span>
-              <strong>{presentacionActiva.concentracion || presentacionActiva.presentacion || 'Según presentación'}</strong>
+              <strong>{limpiarTextoDecimales(presentacionActiva.concentracion) || presentacionActiva.presentacion || 'Según presentación'}</strong>
             </div>
           )}
           {resultado.usaDosisEspecie && (
