@@ -41,3 +41,5 @@ dist/
 .hmr/
 .cache/
 .vite/
+.vercel
+.env*
