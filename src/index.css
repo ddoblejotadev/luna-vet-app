@@ -56,6 +56,78 @@
   --shadow-pink: 0 6px 18px -6px rgba(244, 114, 182, 0.45);
 }
 
+.dark-mode {
+  --primary: #F472B6;
+  --bg-card: #2A2129;
+  --bg-main: #1F1B1F;
+  --border-color: #4E3D4B;
+  --text-primary: #FBF3F8;
+  --text-secondary: #E8D5E3;
+  --text-tertiary: #A78BFA;
+  --cream: #1F1B1F;
+  --card: #2A2129;
+  --ink: #FBF3F8;
+  --ink-soft: #E8D5E3;
+}
+
+
+/* ── MODO OSCURO (Dark Mode) ───────────────────────────── */
+body.dark-mode {
+  --primary: #F472B6;
+  --primary-dark: #F9A8D4;
+  --primary-soft: #50223A;
+  --secondary: #C4B5FD;
+  --secondary-soft: #3B2E5A;
+  --mint: #34D399;
+  --mint-soft: #064E3B;
+  --success: #34D399;
+  --danger: #F87171;
+  --danger-soft: #5B2121;
+  --warning: #FBBF24;
+  --warning-soft: #78350F;
+
+  --gray-50: #1E1B22;
+  --gray-100: #25212B;
+  --gray-200: #332C3A;
+  --gray-300: #483E52;
+  --gray-400: #A28FA0;
+  --gray-500: #BCA9BA;
+  --gray-600: #D4C5D2;
+  --gray-700: #E6DCE5;
+  --gray-800: #F4EFF3;
+  --gray-900: #FFF7FB;
+
+  --cream: #141217;
+  --card: #1F1C23;
+  --ink: #F4EFF3;
+  --ink-soft: #D4C5D2;
+
+  --bg-card: var(--card);
+  --bg-main: var(--cream);
+  --border-color: var(--gray-300);
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-soft);
+  --text-tertiary: var(--gray-400);
+
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(244, 114, 182, 0.05), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 0%, rgba(167, 139, 250, 0.05), transparent);
+}
+
+/* Alta Accesibilidad (Foco de contraste y soporte de tipografía ampliada) */
+body.high-contrast {
+  --primary: #FF007F;
+  --primary-dark: #B30059;
+  --cream: #000000;
+  --card: #1A1A1A;
+  --ink: #FFFFFF;
+  --border-color: #FFFFFF;
+}
+
+body.high-contrast * {
+  border-color: #FFFFFF !important;
+}
+
 * {
   margin: 0;
   padding: 0;

@@ -15,6 +15,21 @@ const NAV_ITEMS = [
 export default function Layout({ children }) {
   const { user, signOut } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('lunavet_theme') === 'dark'
+  })
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark-mode')
+      localStorage.setItem('lunavet_theme', 'dark')
+    } else {
+      document.documentElement.classList.remove('dark-mode')
+      localStorage.setItem('lunavet_theme', 'light')
+    }
+  }, [darkMode])
+
+  const toggleDarkMode = () => setDarkMode(!darkMode)
 
   const closeMenu = () => setMenuOpen(false)
 
@@ -60,6 +75,16 @@ export default function Layout({ children }) {
             </ul>
 
             <div className="navbar-auth">
+              <button
+                type="button"
+                onClick={toggleDarkMode}
+                className="btn btn-secondary btn-theme-toggle"
+                aria-label={darkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+                title={darkMode ? 'Modo claro' : 'Modo oscuro'}
+                style={{ marginRight: '0.5rem', padding: '0.5rem 0.75rem' }}
+              >
+                {darkMode ? '☀️' : '🌙'}
+              </button>
               {user ? (
                 <div className="user-session">
                   <span className="navbar-user" title={user.email}>{user.email}</span>
