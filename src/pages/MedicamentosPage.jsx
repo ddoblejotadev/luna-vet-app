@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Link, useSearchParams, useLocation } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import medicamentosService from '../services/medicamentosService'
+import { limpiarTextoDecimales } from '../utils/formatos.js'
 import './pages.css'
 
 const PAGE_SIZE = 12
