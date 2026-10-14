@@ -49,7 +49,8 @@ export function formatearRangoDosis(min, max) {
  */
 export function formatearConcentracion(conc) {
   if (!conc) return ''
-  const t = conc.trim()
+  // Primero limpiamos los decimales para asegurarnos de trabajar con números sanos
+  let t = limpiarTextoDecimales(conc.trim())
   // Ya expresa concentración por volumen, peso o tiempo
   if (/mg\/ml|µg\/ml|g\/ml|%|mg\/vial|µg\/h|mg\/h|mg\/g|iu\/ml|u\/ml/i.test(t)) return t
   // Dosis sólida por unidad (comprimido/cápsula/jeringa)
