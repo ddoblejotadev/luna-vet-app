@@ -154,6 +154,32 @@ function CopiarDosis({ texto }) {
   )
 }
 
+function PillVisualizer({ dosisMg, concentracionStr }) {
+  const match = concentracionStr?.match(/([0-9]+(\.[0-9]+)?)\s*mg/i)
+  if (!match) return null
+  const mgPorPastilla = parseFloat(match[1])
+  if (!mgPorPastilla || mgPorPastilla <= 0) return null
+
+  const pastillas = dosisMg / mgPorPastilla
+  const porcentaje = Math.min(100, Math.max(10, pastillas * 100))
+
+  let textoFraccion = `${pastillas.toFixed(2)} comp.`
+  if (Math.abs(pastillas - 0.25) < 0.05) textoFraccion = '1/4 comprimido'
+  else if (Math.abs(pastillas - 0.5) < 0.05) textoFraccion = '1/2 comprimido'
+  else if (Math.abs(pastillas - 0.75) < 0.05) textoFraccion = '3/4 comprimido'
+  else if (Math.abs(pastillas - 1) < 0.05) textoFraccion = '1 comprimido'
+  else if (pastillas > 1) textoFraccion = `${pastillas.toFixed(1)} comprimidos`
+
+  return (
+    <div className="pill-visualizer">
+      <div className="pill-container">
+        <div className="pill-fraction" style={{ width: `${porcentaje}%` }}></div>
+      </div>
+      <span className="pill-label">{textoFraccion}</span>
+    </div>
+  )
+}
+
 /**
  * Calculadora embebida en la ficha
  * Usa la presentación seleccionada (y la especie, si hay datos) para
@@ -251,6 +277,9 @@ function CalculadoraEmbebida({ medicamento, presentacionActiva }) {
             <span>Dosis total:</span>
             <strong>{resultado.minMg} – {resultado.maxMg} mg</strong>
           </div>
+          {presentacionActiva?.concentracion && !resultado.tieneConc && (
+            <PillVisualizer dosisMg={resultado.maxMg} concentracionStr={presentacionActiva.concentracion} />
+          )}
           {resultado.tieneConc && (
             <div className="calc-row calc-resultado-mL">
               <span>Equivale en mL:</span>

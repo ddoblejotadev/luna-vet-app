@@ -1995,9 +1995,39 @@ legend {
   }
 }
 
-/* ============================================================
-   CALCULADORA PAGE — input de concentración para mL
-   ============================================================ */
+/* Visualizador de pastilla */
+.pill-visualizer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+  gap: 0.5rem;
+}
+
+.pill-container {
+  position: relative;
+  width: 100px;
+  height: 30px;
+  background: var(--gray-200);
+  border-radius: 15px;
+  overflow: hidden;
+  border: 1px solid var(--gray-400);
+}
+
+.pill-fraction {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+
+.pill-label {
+  font-weight: 600;
+  color: var(--primary);
+}
+
 
 .calc-concentracion-input {
   display: flex;
