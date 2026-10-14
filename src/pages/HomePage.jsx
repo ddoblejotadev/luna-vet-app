@@ -47,30 +47,42 @@ export default function HomePage() {
       <section className="families">
         <h2>Familias Terapéuticas</h2>
         <div className="families-grid">
-          <div className="family-card">
-            <span className="icon">💉</span>
-            <span className="name">Sedantes y Anestésicos</span>
-          </div>
-          <div className="family-card">
-            <span className="icon">💊</span>
-            <span className="name">Analgésicos / Antiinflamatorios</span>
-          </div>
-          <div className="family-card">
-            <span className="icon">🦠</span>
-            <span className="name">Antibióticos / Antimicrobianos</span>
-          </div>
-          <div className="family-card">
-            <span className="icon">🧪</span>
-            <span className="name">Vitaminas y Suplementos</span>
-          </div>
-          <div className="family-card">
-            <span className="icon">🤢</span>
-            <span className="name">Gastrointestinales</span>
-          </div>
-          <div className="family-card">
-            <span className="icon">🫀</span>
-            <span className="name">Cardiovasculares</span>
-          </div>
+          <Link to="/medicamentos?familia=Anestésicos" className="family-card-link">
+            <div className="family-card">
+              <span className="icon" role="img" aria-label="sedantes">💉</span>
+              <span className="name">Sedantes y Anestésicos</span>
+            </div>
+          </Link>
+          <Link to="/medicamentos?familia=Antiinflamatorios" className="family-card-link">
+            <div className="family-card">
+              <span className="icon" role="img" aria-label="analgesicos">💊</span>
+              <span className="name">Analgésicos / Antiinflamatorios</span>
+            </div>
+          </Link>
+          <Link to="/medicamentos?familia=Antibióticos" className="family-card-link">
+            <div className="family-card">
+              <span className="icon" role="img" aria-label="antibioticos">🦠</span>
+              <span className="name">Antibióticos / Antimicrobianos</span>
+            </div>
+          </Link>
+          <Link to="/medicamentos?familia=Vitaminas" className="family-card-link">
+            <div className="family-card">
+              <span className="icon" role="img" aria-label="vitaminas">🧪</span>
+              <span className="name">Vitaminas y Suplementos</span>
+            </div>
+          </Link>
+          <Link to="/medicamentos?familia=Gastrointestinales" className="family-card-link">
+            <div className="family-card">
+              <span className="icon" role="img" aria-label="gastrointestinales">🤢</span>
+              <span className="name">Gastrointestinales</span>
+            </div>
+          </Link>
+          <Link to="/medicamentos?familia=Cardiovasculares" className="family-card-link">
+            <div className="family-card">
+              <span className="icon" role="img" aria-label="cardiovasculares">🫀</span>
+              <span className="name">Cardiovasculares</span>
+            </div>
+          </Link>
         </div>
       </section>
 

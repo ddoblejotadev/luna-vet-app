@@ -1995,7 +1995,29 @@ legend {
   }
 }
 
-/* Visualizador de pastilla */
+/* Estilos para enlaces de familias terapéuticas */
+.family-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  outline: none;
+}
+
+.family-card-link:focus-visible .family-card {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.family-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.family-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+}
+
 .pill-visualizer {
   display: flex;
   justify-content: center;
