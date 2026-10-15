@@ -7,6 +7,68 @@ import './pages.css'
 
 const PAGE_SIZE = 12
 
+const SUGERENCIAS = [
+  { q: 'dolor', label: 'Dolor' },
+  { q: 'fiebre', label: 'Fiebre' },
+  { q: 'pulgas', label: 'Pulgas' },
+  { q: 'vómito', label: 'Vómito' },
+  { q: 'inflamación', label: 'Inflamación' },
+  { q: 'ansiedad', label: 'Ansiedad' },
+]
+
+const PRESENTACION_ICONOS = [
+  { match: /inyect|soluci|vial|frasco|ampolla/i, icon: '💉' },
+  { match: /comprim|tableta|cápsula|capsula|pastilla|mastic/i, icon: '💊' },
+  { match: /spot|pipeta|tópico|topico|spray|baño/i, icon: '💧' },
+  { match: /crema|unguent|gel|pomada/i, icon: '🧴' },
+  { match: /gota|oft[aá]lm|colirio/i, icon: '👁️' },
+]
+
+const ESPECIE_ICONOS = {
+  Perro: '🐕',
+  Gato: '🐈',
+  Caballo: '🐴',
+  Equino: '🐴',
+  Vaca: '🐮',
+  Bovino: '🐮',
+  Ovino: '🐑',
+  Porcino: '🐷',
+  Aves: '🦜',
+}
+
+const normalizar = (texto) =>
+  (texto || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+
+function iconoPresentacion(texto) {
+  const encontrado = PRESENTACION_ICONOS.find((item) => item.match.test(texto || ''))
+  return encontrado ? encontrado.icon : '💊'
+}
+
+function listaEspecies(valor) {
+  if (Array.isArray(valor)) return valor.filter(Boolean)
+  if (typeof valor === 'string') {
+    return valor.split(',').map((item) => item.trim()).filter(Boolean)
+  }
+  return []
+}
+
+function recorteIndicacion(medicamento, consulta) {
+  const texto = medicamento.indicaciones || ''
+  if (!texto) return ''
+  const termino = normalizar(consulta).trim()
+  if (!termino) return texto.length > 90 ? `${texto.slice(0, 87)}…` : texto
+  const plano = normalizar(texto)
+  const indice = plano.indexOf(termino)
+  if (indice < 0) return texto.length > 90 ? `${texto.slice(0, 87)}…` : texto
+  const inicio = Math.max(0, indice - 28)
+  const fin = Math.min(texto.length, indice + termino.length + 48)
+  const recorte = texto.slice(inicio, fin).trim()
+  return `${inicio > 0 ? '…' : ''}${recorte}${fin < texto.length ? '…' : ''}`
+}
+
 export default function MedicamentosPage() {
   const { user } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -206,7 +268,7 @@ export default function MedicamentosPage() {
           <p className="eyebrow">Catálogo</p>
           <h1>Medicamentos Veterinarios</h1>
           <p className="lead-small">
-            Base de datos clínica para estudio y consulta rápida.
+            Buscá por nombre, familia o para qué sirve: dolor, fiebre, pulgas.
           </p>
         </div>
         {user && (
@@ -219,15 +281,16 @@ export default function MedicamentosPage() {
         )}
       </header>
 
-      {/* Filtros */}
-      <div className="filters-bar">
+      <section className="catalog-search" aria-label="Buscar en el catálogo">
         <div className="search-box">
+          <span className="search-icon" aria-hidden="true">⌕</span>
           <input
-            type="text"
-            placeholder="Buscar por nombre, principio activo, familia, uso..."
+            type="search"
+            placeholder="Ej: dolor muscular, meloxicam, antibiótico…"
             value={searchInput}
             onChange={handleSearchChange}
             className="search-input"
+            aria-label="Buscar medicamento por nombre, familia o indicación"
           />
           {searchInput && (
             <button
@@ -242,6 +305,26 @@ export default function MedicamentosPage() {
             </button>
           )}
         </div>
+        <div className="search-chips" role="list">
+          {SUGERENCIAS.map((item) => {
+            const activa = normalizar(searchFromUrl) === normalizar(item.q)
+            return (
+              <button
+                key={item.q}
+                type="button"
+                role="listitem"
+                className={activa ? 'search-chip search-chip--active' : 'search-chip'}
+                aria-pressed={activa}
+                onClick={() => updateParams({ q: activa ? null : item.q, page: null })}
+              >
+                {item.label}
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
+      <div className="filters-bar">
 
         <select
           value={selectedFamilia}
@@ -464,9 +547,29 @@ export default function MedicamentosPage() {
                   {medicamento.concentracion && (
                     <p className="medicamento-card-concentracion">{medicamento.concentracion}</p>
                   )}
-                  <div className="medicamento-card-footer">
-                    <span className="medicamento-card-familia">{medicamento.familia_terapeutica}</span>
+                  <div className="medicamento-card-tags">
+                    {medicamento.familia_terapeutica && (
+                      <span className="tag-family">{medicamento.familia_terapeutica}</span>
+                    )}
+                    {medicamento.presentacion && (
+                      <span className="tag-format">
+                        <span aria-hidden="true">{iconoPresentacion(medicamento.presentacion)}</span>
+                        {medicamento.presentacion}
+                      </span>
+                    )}
+                    {listaEspecies(medicamento.especies_permitidas).slice(0, 4).map((esp) => (
+                      <span key={esp} className="tag-species">
+                        <span aria-hidden="true">{ESPECIE_ICONOS[esp] || '🐾'}</span>
+                        {esp}
+                      </span>
+                    ))}
                   </div>
+                  {recorteIndicacion(medicamento, searchFromUrl) && (
+                    <p className="medicamento-card-uso">
+                      <span>Sirve para</span>
+                      {recorteIndicacion(medicamento, searchFromUrl)}
+                    </p>
+                  )}
                 </Link>
               )
             })}

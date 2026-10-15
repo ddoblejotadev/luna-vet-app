@@ -57,7 +57,6 @@
 }
 
 .dark-mode {
-  --primary: #F472B6;
   --bg-card: #2A2129;
   --bg-main: #1F1B1F;
   --border-color: #4E3D4B;
@@ -68,6 +67,25 @@
   --card: #2A2129;
   --ink: #FBF3F8;
   --ink-soft: #E8D5E3;
+}
+
+/* Blindaje: Forzar variables en body y elementos clave para modo oscuro */
+body.dark-mode {
+  background-color: var(--bg-main) !important;
+  color: var(--text-primary) !important;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode strong {
+  color: var(--text-primary) !important;
+}
+
+body.dark-mode .feature-card,
+body.dark-mode .family-card {
+  background-color: var(--card) !important;
+  border-color: var(--border-color) !important;
 }
 
 

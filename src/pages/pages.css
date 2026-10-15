@@ -2155,30 +2155,83 @@ legend {
   flex-wrap: wrap;
 }
 
+.catalog-search {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+  padding: 1rem;
+  background:
+    linear-gradient(135deg, var(--primary-soft), var(--secondary-soft));
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.search-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.search-chip {
+  border: 1px solid transparent;
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 650;
+  cursor: pointer;
+  min-height: 36px;
+}
+
+.search-chip:hover,
+.search-chip--active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.search-chip:focus-visible {
+  outline: 2px solid var(--primary-dark);
+  outline-offset: 2px;
+}
+
 .filters-bar {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
-  background: white;
-  padding: 1rem;
+  background: var(--card);
+  padding: 0.85rem;
+  border: 1px solid var(--border-color);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 
 .search-box {
-  flex: 1;
-  min-width: 240px;
   position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary-dark);
+  font-size: 1.15rem;
+  pointer-events: none;
 }
 
 .search-input {
   width: 100%;
-  padding: 0.75rem 2.25rem 0.75rem 0.75rem;
+  padding: 0.85rem 2.4rem 0.85rem 2.4rem;
   border: 1px solid var(--gray-300);
-  border-radius: var(--radius);
-  font-size: 0.95rem;
-  min-height: 44px;
+  border-radius: 999px;
+  font-size: 1rem;
+  min-height: 48px;
+  background: var(--card);
+  color: var(--ink);
 }
 
 .search-input:focus {
@@ -2189,16 +2242,18 @@ legend {
 
 .search-clear {
   position: absolute;
-  right: 0.5rem;
+  right: 0.7rem;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
+  background: var(--primary-soft);
+  color: var(--primary-dark);
   border: none;
-  font-size: 1.5rem;
-  color: var(--gray-500);
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  font-size: 1.15rem;
   cursor: pointer;
   line-height: 1;
-  padding: 0 0.25rem;
 }
 
 .filter-select {
@@ -2206,7 +2261,8 @@ legend {
   border: 1px solid var(--gray-300);
   border-radius: var(--radius);
   font-size: 0.9rem;
-  background: white;
+  background: var(--card);
+  color: var(--ink);
   min-height: 44px;
 }
 
@@ -2262,6 +2318,61 @@ legend {
   color: var(--gray-600);
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+.medicamento-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.tag-format,
+.tag-species,
+.tag-family {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.tag-format {
+  background: var(--secondary-soft);
+  color: var(--ink);
+}
+
+.tag-species {
+  background: var(--mint-soft);
+  color: var(--ink);
+}
+
+.tag-family {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+.medicamento-card-uso {
+  margin: 0.7rem 0 0;
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.8rem;
+  background: var(--gray-50);
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.medicamento-card-uso span {
+  display: block;
+  margin-bottom: 0.15rem;
+  color: var(--primary-dark);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .pagination {
